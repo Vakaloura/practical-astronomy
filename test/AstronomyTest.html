@@ -5,20 +5,20 @@
     <head>
         <meta charset="utf-8">
         <title>Astronomy Tests</title>
-        <link rel="stylesheet" href="qunit-1.19.0.css">
+        <link rel="stylesheet" href="qunit-2.4.0.css">
     </head>
     <body>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
-        <script src="./qunit-1.19.0.js"></script>
+        <script src="./qunit-2.4.0.js"></script>
         <script src="../src/Astronomy.js"></script>
         <script>
 
             var astronomy = new Astronomy();
 
-            module("01 - Calendars");
+            QUnit.module("01 - Calendars");
 
-            test("Days in month when not a leap year", function(assert) {
+            QUnit.test("Days in month when not a leap year", function(assert) {
 
                 assert.equal(astronomy.daysInMonth(2015, 1), 31);
                 assert.equal(astronomy.daysInMonth(2015, 2), 28);
@@ -34,22 +34,22 @@
                 assert.equal(astronomy.daysInMonth(2015, 12), 31);
             });
 
-            test("Days in February when a common leap year", function(assert) {
+            QUnit.test("Days in February when a common leap year", function(assert) {
 
                 assert.equal(astronomy.daysInMonth(2016, 2), 29);
             });
 
-            test("Days in February when a century leap year", function(assert) {
+            QUnit.test("Days in February when a century leap year", function(assert) {
 
                 assert.equal(astronomy.daysInMonth(2000, 2), 29);
             });
 
-            test("Days in February when not a century leap year", function(assert) {
+            QUnit.test("Days in February when not a century leap year", function(assert) {
 
                 assert.equal(astronomy.daysInMonth(1900, 2), 28);
             });
 
-            test("Days in month before first year of Gregorian calendar", function(assert) {
+            QUnit.test("Days in month before first year of Gregorian calendar", function(assert) {
 
                 assert.throws(
                     function() {
@@ -59,29 +59,29 @@
                 );
             });
 
-            module("02 - The date of Easter");
+            QUnit.module("02 - The date of Easter");
 
-            test("Date of Easter", function(assert) {
+            QUnit.test("Date of Easter", function(assert) {
 
                 assert.equal(astronomy.dateOfEaster(1974).toString(), new CalendarDate(1974, 4, 14).toString());
             });
 
-            test("Earliest date of Easter", function(assert) {
+            QUnit.test("Earliest date of Easter", function(assert) {
 
                 assert.equal(astronomy.dateOfEaster(1818).toString(), new CalendarDate(1818, 3, 22).toString());
             });
 
-            test("Latest date of Easter", function(assert) {
+            QUnit.test("Latest date of Easter", function(assert) {
 
                 assert.equal(astronomy.dateOfEaster(1943).toString(), new CalendarDate(1943, 4, 25).toString());
             });
 
-            test("Date of Easter on first year of Gregorian calendar", function(assert) {
+            QUnit.test("Date of Easter on first year of Gregorian calendar", function(assert) {
 
                 assert.equal(astronomy.dateOfEaster(1583).toString(), new CalendarDate(1583, 4, 10).toString());
             });
 
-            test("Date of Easter before first year of Gregorian calendar", function(assert) {
+            QUnit.test("Date of Easter before first year of Gregorian calendar", function(assert) {
 
                 assert.throws(
                     function() {
@@ -91,9 +91,9 @@
                 );
             });
 
-            module("03 - Converting the date to the day number");
+            QUnit.module("03 - Converting the date to the day number");
 
-            test("Date to day number", function(assert) {
+            QUnit.test("Date to day number", function(assert) {
 
                 assert.equal(astronomy.dateToDayNumber(new CalendarDate(1985, 1, 1)), 1); // first day of year
                 assert.equal(astronomy.dateToDayNumber(new CalendarDate(1985, 2, 17)), 48); // month <= 2
@@ -103,7 +103,7 @@
                 assert.equal(astronomy.dateToDayNumber(new CalendarDate(1984, 12, 31)), 366); // last day of year, leap year
             });
 
-            test("Date to day number before Gregorian calendar", function(assert) {
+            QUnit.test("Date to day number before Gregorian calendar", function(assert) {
 
                 assert.throws(
                     function() {
@@ -113,7 +113,7 @@
                 );
             });
 
-            test("Date to days elapsed since epoch", function(assert) {
+            QUnit.test("Date to days elapsed since epoch", function(assert) {
 
                 assert.equal(astronomy.dateToDaysElapsedSinceEpoch(new CalendarDate(2005, 2, 17)), -1778); // before epoch
                 assert.equal(astronomy.dateToDaysElapsedSinceEpoch(new CalendarDate(2009, 12, 31)), 0); // epoch
@@ -122,7 +122,7 @@
                 assert.equal(astronomy.dateToDaysElapsedSinceEpoch(new CalendarDate(2016, 9, 20)), 2455); // after epoch
             });
 
-            test("Date to days elapsed since epoch before Gregorian Calendar", function(assert) {
+            QUnit.test("Date to days elapsed since epoch before Gregorian Calendar", function(assert) {
 
                 assert.throws(
                     function() {
@@ -132,16 +132,16 @@
                 );
             });
 
-            module("04 - Julian dates");
+            QUnit.module("04 - Julian dates");
 
-            test("Date to julian day number", function(assert) {
+            QUnit.test("Date to julian day number", function(assert) {
 
                 assert.equal(astronomy.dateToJulianDayNumber(new CalendarDate(-4712, 1, 1.5)), 0); // JD zero: noon January 1st 4713 BC
                 assert.equal(astronomy.dateToJulianDayNumber(new CalendarDate(1985, 2, 17.25)), 2446113.75);
                 assert.equal(astronomy.dateToJulianDayNumber(new CalendarDate(1989, 12, 31)), 2447891.5);
             });
 
-            test("Date to modified julian day number", function(assert) {
+            QUnit.test("Date to modified julian day number", function(assert) {
 
                 assert.equal(astronomy.dateToModifiedJulianDayNumber(new CalendarDate(1858, 11, 17)), 0); // MJD zero: midnight November 17th 1858
                 assert.equal(astronomy.dateToModifiedJulianDayNumber(new CalendarDate(-4712, 1, 1.5)), -2400000.5);
@@ -149,15 +149,15 @@
                 assert.equal(astronomy.dateToModifiedJulianDayNumber(new CalendarDate(1989, 12, 31)), 47891);
             });
 
-            module("05 - Converting the Julian date to the Greenwich calendar date")
+            QUnit.module("05 - Converting the Julian date to the Greenwich calendar date")
 
-            test("Date to julian day number", function(assert) {
+            QUnit.test("Date to julian day number", function(assert) {
 
                 assert.equal(astronomy.julianDayNumberToDate(2446113.75).toString(), new CalendarDate(1985, 2, 17.25).toString());
                 assert.equal(astronomy.julianDayNumberToDate(2299160.5).toString(), new CalendarDate(1582, 10, 15).toString());
             });
 
-            test("Julian day before Gregorian Calendar", function(assert) {
+            QUnit.test("Julian day before Gregorian Calendar", function(assert) {
 
                 assert.throws(
                     function() {
@@ -167,9 +167,9 @@
                 );
             });
 
-            module("06 - Finding the name of the day of the week")
+            QUnit.module("06 - Finding the name of the day of the week")
 
-            test("Date to day of week", function(assert) {
+            QUnit.test("Date to day of week", function(assert) {
 
                 assert.equal(astronomy.dateToDayOfWeek(new CalendarDate(1985, 2, 17)), "Sunday");
                 assert.equal(astronomy.dateToDayOfWeek(new CalendarDate(1985, 2, 18)), "Monday");
@@ -180,7 +180,7 @@
                 assert.equal(astronomy.dateToDayOfWeek(new CalendarDate(1985, 2, 23)), "Saturday");
             });
 
-            test("Date to day of week before Gregorian Calendar", function(assert) {
+            QUnit.test("Date to day of week before Gregorian Calendar", function(assert) {
 
                 assert.throws(
                     function() {
@@ -190,7 +190,7 @@
                 );
             });
 
-            test("Julian day number to day of week", function(assert) {
+            QUnit.test("Julian day number to day of week", function(assert) {
 
                 assert.equal(astronomy.julianDayNumberToDayOfWeek(2446113.5), "Sunday");
                 assert.equal(astronomy.julianDayNumberToDayOfWeek(2446114.5), "Monday");
@@ -201,9 +201,9 @@
                 assert.equal(astronomy.julianDayNumberToDayOfWeek(2446119.5), "Saturday");
             });
 
-            module("07 - Converting hours, minutes and seconds to decimal hours")
+            QUnit.module("07 - Converting hours, minutes and seconds to decimal hours")
 
-            test("Hours, minutes and seconds to decimal hours", function(assert) {
+            QUnit.test("Hours, minutes and seconds to decimal hours", function(assert) {
 
                 assert.equal(astronomy.hoursMinutesSecondsToDecimalHours(new TimeOfDay(0, 0, 0)), 0);
                 assert.equal(astronomy.hoursMinutesSecondsToDecimalHours(new TimeOfDay(18, 31, 27)), 18.524166666666666);
@@ -212,9 +212,9 @@
                 assert.equal(astronomy.hoursMinutesSecondsToDecimalHours(new TimeOfDay(23, 59, 59)), 23.99972222222222);
             });
 
-            module("08 - Converting decimal hours to hours, minutes and seconds")
+            QUnit.module("08 - Converting decimal hours to hours, minutes and seconds")
 
-            test("Decimal hours to hours, minutes and seconds", function(assert) {
+            QUnit.test("Decimal hours to hours, minutes and seconds", function(assert) {
 
                 assert.equal(astronomy.decimalHoursToHoursMinutesSeconds(0).toString(), new TimeOfDay(0, 0, 0).toString());
                 assert.equal(astronomy.decimalHoursToHoursMinutesSeconds(18.524166666666666).toString(), new TimeOfDay(18, 31, 27).toString());
@@ -224,9 +224,9 @@
                 assert.equal(astronomy.decimalHoursToHoursMinutesSeconds(23.99972222222222).toString(), new TimeOfDay(23, 59, 59).toString());
             });
 
-            module("09 - Converting the local time to Universal Time (UT)")
+            QUnit.module("09 - Converting the local time to Universal Time (UT)")
 
-            test("Local time to universal time", function(assert) {
+            QUnit.test("Local time to universal time", function(assert) {
 
                 assert.equal(
                     astronomy.localTimeToUniversalTime( // Shift back, DST
@@ -249,9 +249,9 @@
                     new DateAndTime(new CalendarDate(2015, 12, 31), new TimeOfDay(14, 50, 53)).toString());
             });
 
-            module("10 - Converting UT and Greenwich calendar date to local time and date")
+            QUnit.module("10 - Converting UT and Greenwich calendar date to local time and date")
 
-            test("Universal time to local time", function(assert) {
+            QUnit.test("Universal time to local time", function(assert) {
 
                 assert.equal(
                     astronomy.universalTimeToLocalTime( // Shift forward, DST
@@ -273,9 +273,9 @@
                     new DateAndTime(new CalendarDate(2015, 12, 31), new TimeOfDay(15, 50, 53)).toString());
             });
 
-            module("12 - Conversion of UT to Greenwich sidereal time (GST)")
+            QUnit.module("12 - Conversion of UT to Greenwich sidereal time (GST)")
 
-            test("Universal time to greenwich sidereal time", function(assert) {
+            QUnit.test("Universal time to greenwich sidereal time", function(assert) {
 
                 assert.equal(
                     astronomy.universalTimeToGreenwichSiderealTime(
@@ -283,9 +283,9 @@
                     new TimeOfDay(4, 40, 5.23).toString());
             });
 
-            module("13 - Conversion of GST to UT")
+            QUnit.module("13 - Conversion of GST to UT")
 
-            test("Greenwich sidereal time to universal time", function(assert) {
+            QUnit.test("Greenwich sidereal time to universal time", function(assert) {
 
                 assert.equal(
                     astronomy.greenwichSiderealTimeToUniversalTime(
@@ -303,7 +303,7 @@
                     new TimeOfDay(0, 3, 56.838).toString());
             });
 
-            test("Greenwich sidereal time at beginning of ambiguous period to universal time", function(assert) {
+            QUnit.test("Greenwich sidereal time at beginning of ambiguous period to universal time", function(assert) {
 
                 var universalTimes = astronomy.greenwichSiderealTimeToUniversalTime(
                     new DateAndTime(new CalendarDate(1980, 4, 22), new TimeOfDay(14, 0, 50)));
@@ -312,7 +312,7 @@
                 assert.equal(universalTimes[1].toString(), new TimeOfDay(23, 56, 4.419).toString());
             });
 
-            test("Greenwich sidereal time during ambiguous period to universal time", function(assert) {
+            QUnit.test("Greenwich sidereal time during ambiguous period to universal time", function(assert) {
 
                 var universalTimes = astronomy.greenwichSiderealTimeToUniversalTime(
                     new DateAndTime(new CalendarDate(1980, 4, 22), new TimeOfDay(14, 2, 0)));
@@ -321,7 +321,7 @@
                 assert.equal(universalTimes[1].toString(), new TimeOfDay(23, 57, 14.228).toString());
             });
 
-            test("Greenwich sidereal time at end of ambiguous period to universal time", function(assert) {
+            QUnit.test("Greenwich sidereal time at end of ambiguous period to universal time", function(assert) {
 
                 var universalTimes = astronomy.greenwichSiderealTimeToUniversalTime(
                     new DateAndTime(new CalendarDate(1980, 4, 22), new TimeOfDay(14, 4, 46)));
@@ -330,9 +330,9 @@
                 assert.equal(universalTimes[1].toString(), new TimeOfDay(23, 59, 59.774).toString());
             });
 
-            module("14 - Local sidereal time (LST)")
+            QUnit.module("14 - Local sidereal time (LST)")
 
-            test("Greenwich sidereal time to local sidereal time", function(assert) {
+            QUnit.test("Greenwich sidereal time to local sidereal time", function(assert) {
 
                 assert.equal( // Shift back
                     astronomy.greenwichSiderealTimeToLocalSiderealTime(new TimeOfDay(4, 40, 5.23), -64).toString(),
@@ -347,9 +347,9 @@
                     new TimeOfDay(8, 56, 5.23).toString());
             });
 
-            module("15 - Converting LST to GST")
+            QUnit.module("15 - Converting LST to GST")
 
-            test("Local sidereal time to greenwich sidereal time", function(assert) {
+            QUnit.test("Local sidereal time to greenwich sidereal time", function(assert) {
 
                 assert.equal( // Shift back
                     astronomy.localSiderealTimeToGreenwichSiderealTime(new TimeOfDay(8, 56, 5.23), 64).toString(),
@@ -364,9 +364,9 @@
                     new TimeOfDay(4, 40, 5.23).toString());
             });
 
-            module("21 - Converting between decimal degrees and degrees minutes and seconds");
+            QUnit.module("21 - Converting between decimal degrees and degrees minutes and seconds");
 
-            test("Decimal degrees to degrees, minutes and seconds", function(assert) {
+            QUnit.test("Decimal degrees to degrees, minutes and seconds", function(assert) {
 
                 assert.equal(
                     astronomy.decimalDegreesToDegreesMinutesSeconds(0).toString(),
@@ -381,7 +381,7 @@
                     new DegreesMinutesSeconds(-182, 31, 27).toString());
             });
 
-            test("Degrees, minutes and seconds to decimal degrees ", function(assert) {
+            QUnit.test("Degrees, minutes and seconds to decimal degrees ", function(assert) {
 
                 assert.equal(
                     astronomy.degreesMinutesSecondsToDecimalDegrees(new DegreesMinutesSeconds(0, 0, 0)),
@@ -400,23 +400,23 @@
                     -182.52416666666667);
             });
 
-            module("22 - Converting between angles expressed in degrees and angles expressed in hours")
+            QUnit.module("22 - Converting between angles expressed in degrees and angles expressed in hours")
 
-            test("Decimal hours to decimal degrees", function(assert) {
+            QUnit.test("Decimal hours to decimal degrees", function(assert) {
 
                 assert.equal(astronomy.decimalHoursToDecimalDegrees(0), 0);
                 assert.equal(astronomy.decimalHoursToDecimalDegrees(1), 15);
                 assert.equal(astronomy.decimalHoursToDecimalDegrees(24), 360);
             });
 
-            test("Decimal degrees to decimal hours", function(assert) {
+            QUnit.test("Decimal degrees to decimal hours", function(assert) {
 
                 assert.equal(astronomy.decimalDegreesToDecimalHours(0), 0);
                 assert.equal(astronomy.decimalDegreesToDecimalHours(15), 1);
                 assert.equal(astronomy.decimalDegreesToDecimalHours(360), 24);
             });
 
-            test("Hours, minutes and seconds to degrees, minutes and seconds", function(assert) {
+            QUnit.test("Hours, minutes and seconds to degrees, minutes and seconds", function(assert) {
 
                 assert.equal(
                     astronomy.hoursMinutesSecondsToDegreesMinutesSeconds(new TimeOfDay(0, 0, 0)).toString(),
@@ -431,7 +431,7 @@
                     new DegreesMinutesSeconds(359, 59, 45).toString());
             });
 
-            test("Degrees, minutes and seconds to hours, minutes and seconds", function(assert) {
+            QUnit.test("Degrees, minutes and seconds to hours, minutes and seconds", function(assert) {
 
                 assert.equal(
                     astronomy.degreesMinutesSecondsToHoursMinutesSeconds(new DegreesMinutesSeconds(0, 0, 0)).toString(),
@@ -446,9 +446,9 @@
                     new TimeOfDay(23, 59, 59).toString());
             });
 
-            module("24 - Converting between right ascension and hour angle")
+            QUnit.module("24 - Converting between right ascension and hour angle")
 
-            test("Right ascension to hour angle", function(assert) {
+            QUnit.test("Right ascension to hour angle", function(assert) {
 
                 assert.equal(
                     astronomy.rightAscensionToHourAngle(
@@ -478,7 +478,7 @@
                     new TimeOfDay(1, 4, 23.655).toString());
             });
 
-            test("Hour angle to right ascension", function(assert) {
+            QUnit.test("Hour angle to right ascension", function(assert) {
 
                 assert.equal(
                     astronomy.hourAngleToRightAscension(
@@ -508,9 +508,9 @@
                     new TimeOfDay(9, 44, 21).toString());
             });
 
-            module("25 - Equatorial to horizon coordinate conversion")
+            QUnit.module("25 - Equatorial to horizon coordinate conversion")
 
-            test("Hour angle equatorial coordinates to horizon coordinates", function(assert) {
+            QUnit.test("Hour angle equatorial coordinates to horizon coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.hourAngleEquatorialToHorizonCoordinates(
@@ -541,9 +541,9 @@
                 );
             });
 
-            module("26 - Horizon to equatorial coordinate conversion")
+            QUnit.module("26 - Horizon to equatorial coordinate conversion")
 
-            test("Horizon coordinates to hour angle equatorial coordinates", function(assert) {
+            QUnit.test("Horizon coordinates to hour angle equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.horizonToHourAngleEquatorialCoordinates(
@@ -574,15 +574,15 @@
                 );
             });
 
-            module("27 - Ecliptic to equatorial coordinate conversion")
+            QUnit.module("27 - Ecliptic to equatorial coordinate conversion")
 
-            test("Mean obliquity of the ecliptic", function(assert) {
+            QUnit.test("Mean obliquity of the ecliptic", function(assert) {
 
                 assert.equal(astronomy.meanObliquityOfTheEcliptic(new CalendarDate(2009, 7, 6)), 23.439231760247182);
                 assert.equal(astronomy.meanObliquityOfTheEcliptic(new CalendarDate(2016, 1, 14)), 23.434542573418017);
             });
 
-            test("Ecliptic coordinates to right ascension equatorial coordinates", function(assert) {
+            QUnit.test("Ecliptic coordinates to right ascension equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.eclipticToRightAscensionEquatorialCoordinates(
@@ -613,9 +613,9 @@
                 );
             });
 
-            module("28 - Equatorial to ecliptic coordinate conversion")
+            QUnit.module("28 - Equatorial to ecliptic coordinate conversion")
 
-            test("Right ascension equatorial coordinates to ecliptic coordinates", function(assert) {
+            QUnit.test("Right ascension equatorial coordinates to ecliptic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.rightAscensionEquatorialToEclipticCoordinates(
@@ -646,9 +646,9 @@
                 );
             });
 
-            module("29 - Equatorial to galactic coordinate conversion")
+            QUnit.module("29 - Equatorial to galactic coordinate conversion")
 
-            test("Right ascension equatorial coordinates to galactic coordinates", function(assert) {
+            QUnit.test("Right ascension equatorial coordinates to galactic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.rightAscensionEquatorialToGalacticCoordinates(
@@ -677,9 +677,9 @@
                 );
             });
 
-            module("30 - Galactic to equatorial coordinate conversion")
+            QUnit.module("30 - Galactic to equatorial coordinate conversion")
 
-            test("Galactic coordinates to right ascension equatorial coordinates", function(assert) {
+            QUnit.test("Galactic coordinates to right ascension equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.galacticToRightAscensionEquatorialCoordinates(
@@ -708,9 +708,9 @@
                 );
             });
 
-            module ("31 - Generalised coordinate transformations")
+            QUnit.module ("31 - Generalised coordinate transformations")
 
-            test("Hour angle equatorial coordinates to right ascension equatorial coordinates", function(assert) {
+            QUnit.test("Hour angle equatorial coordinates to right ascension equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.hourAngleEquatorialToRightAscensionEquatorialCoordinates(
@@ -730,7 +730,7 @@
                 )
             });
 
-            test("Right ascension equatorial coordinates to hour angle equatorial coordinates", function(assert) {
+            QUnit.test("Right ascension equatorial coordinates to hour angle equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.rightAscensionEquatorialToHourAngleEquatorialCoordinates(
@@ -750,7 +750,7 @@
                 )
             });
 
-            test("Ecliptic coordinates to galactic coordinates", function(assert) {
+            QUnit.test("Ecliptic coordinates to galactic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.eclipticToGalacticCoordinates(
@@ -767,7 +767,7 @@
                 )
             });
 
-            test("Galactic coordinates to ecliptic coordinates", function(assert) {
+            QUnit.test("Galactic coordinates to ecliptic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.galacticToEclipticCoordinates(
@@ -784,7 +784,7 @@
                 )
             });
 
-            test("Hour angle equatorial coordinates to ecliptic coordinates", function(assert) {
+            QUnit.test("Hour angle equatorial coordinates to ecliptic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.hourAngleEquatorialToEclipticCoordinates(
@@ -804,7 +804,7 @@
                 )
             });
 
-            test("Ecliptic coordinates to hour angle equatorial coordinates", function(assert) {
+            QUnit.test("Ecliptic coordinates to hour angle equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.eclipticToHourAngleEquatorialCoordinates(
@@ -824,7 +824,7 @@
                 )
             });
 
-            test("Hour angle equatorial coordinates to galactic coordinates", function(assert) {
+            QUnit.test("Hour angle equatorial coordinates to galactic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.hourAngleEquatorialToGalacticCoordinates(
@@ -844,7 +844,7 @@
                 )
             });
 
-            test("Galactic coordinates to hour angle equatorial coordinates", function(assert) {
+            QUnit.test("Galactic coordinates to hour angle equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.galacticToHourAngleEquatorialCoordinates(
@@ -864,7 +864,7 @@
                 )
             });
 
-            test("Horizon coordinates to right ascension equatorial coordinates", function(assert) {
+            QUnit.test("Horizon coordinates to right ascension equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.horizonToRightAscensionEquatorialCoordinates(
@@ -885,7 +885,7 @@
                 )
             });
 
-            test("Right ascension equatorial coordinates to horizon coordinates", function(assert) {
+            QUnit.test("Right ascension equatorial coordinates to horizon coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.rightAscensionEquatorialToHorizonCoordinates(
@@ -906,7 +906,7 @@
                 )
             });
 
-            test("Horizon coordinates to ecliptic coordinates", function(assert) {
+            QUnit.test("Horizon coordinates to ecliptic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.horizonToEclipticCoordinates(
@@ -927,7 +927,7 @@
                 )
             });
 
-            test("Ecliptic coordinates to horizon coordinates", function(assert) {
+            QUnit.test("Ecliptic coordinates to horizon coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.eclipticToHorizonCoordinates(
@@ -949,7 +949,7 @@
             });
 
 
-            test("Horizon coordinates to galactic coordinates", function(assert) {
+            QUnit.test("Horizon coordinates to galactic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.horizonToGalacticCoordinates(
@@ -970,7 +970,7 @@
                 )
             });
 
-            test("Galactic coordinates to horizon coordinates", function(assert) {
+            QUnit.test("Galactic coordinates to horizon coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.galacticToHorizonCoordinates(
@@ -992,9 +992,9 @@
             });
 
 
-            module("32 - The angle between two celestial objects")
+            QUnit.module("32 - The angle between two celestial objects")
 
-            test("Angle between right ascension equatorial coordinates", function(assert) {
+            QUnit.test("Angle between right ascension equatorial coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.angleBetweenRightAscensionEquatorialCoordinates(
@@ -1011,7 +1011,7 @@
                 );
             });
 
-            test("Angle between ecliptic coordinates", function(assert) {
+            QUnit.test("Angle between ecliptic coordinates", function(assert) {
 
                 assert.equal(
                     astronomy.angleBetweenEclipticCoordinates(
@@ -1028,9 +1028,9 @@
                 );
             });
 
-            module("35 - Nutation")
+            QUnit.module("35 - Nutation")
 
-            test("Nutation", function(assert) {
+            QUnit.test("Nutation", function(assert) {
 
                 assert.equal(
                     astronomy.nutation(new CalendarDate(1988, 9, 1)).toString(),
