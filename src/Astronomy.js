@@ -8,13 +8,13 @@ function AstronomyError(message) {
 
 AstronomyError.prototype = Error.prototype;
 
-function Astronomy() {}
+var Astronomy = {};
 
 /*
  * 01 - Calendars
  */
 
-Astronomy.prototype.daysInMonth = function(year, month) {
+Astronomy.daysInMonth = function(year, month) {
 
     checkMonthInGregorianCalendar(year, month);
 
@@ -38,7 +38,7 @@ Astronomy.prototype.daysInMonth = function(year, month) {
  * 02 - The date of Easter
  */
 
-Astronomy.prototype.dateOfEaster = function(year) {
+Astronomy.dateOfEaster = function(year) {
 
     checkYearInGregorianCalendar(year);
 
@@ -65,7 +65,7 @@ Astronomy.prototype.dateOfEaster = function(year) {
  * 03 - Converting the date to the day number
  */
 
-Astronomy.prototype.dateToDayNumber = function(calendarDate) {
+Astronomy.dateToDayNumber = function(calendarDate) {
 
     checkDateInGregorianCalendar(calendarDate);
 
@@ -89,7 +89,7 @@ Astronomy.prototype.dateToDayNumber = function(calendarDate) {
     return dayNumber;
 }
 
-Astronomy.prototype.dateToDaysElapsedSinceEpoch = function(calendarDate) {
+Astronomy.dateToDaysElapsedSinceEpoch = function(calendarDate) {
 
     checkDateInGregorianCalendar(calendarDate);
 
@@ -103,7 +103,7 @@ Astronomy.prototype.dateToDaysElapsedSinceEpoch = function(calendarDate) {
  * 04 - Julian dates
  */
 
-Astronomy.prototype.dateToJulianDayNumber = function(calendarDate) {
+Astronomy.dateToJulianDayNumber = function(calendarDate) {
 
     var y = calendarDate.year;
     var m = calendarDate.month;
@@ -133,7 +133,7 @@ Astronomy.prototype.dateToJulianDayNumber = function(calendarDate) {
     return b + c + d + calendarDate.day + 1720994.5;
 }
 
-Astronomy.prototype.dateToModifiedJulianDayNumber = function(calendarDate) {
+Astronomy.dateToModifiedJulianDayNumber = function(calendarDate) {
 
     return this.dateToJulianDayNumber(calendarDate) - 2400000.5;
 }
@@ -142,7 +142,7 @@ Astronomy.prototype.dateToModifiedJulianDayNumber = function(calendarDate) {
  * 05 - Converting the Julian date to the Greenwich calendar date
  */
 
-Astronomy.prototype.julianDayNumberToDate = function(julianDayNumber) {
+Astronomy.julianDayNumberToDate = function(julianDayNumber) {
 
     if (julianDayNumber < 2299160.5) {
         throw new AstronomyError("julian day number must be in Gregorian Calendar, i.e. >= 2299160.5");
@@ -185,14 +185,14 @@ Astronomy.prototype.julianDayNumberToDate = function(julianDayNumber) {
  * 06 - Finding the name of the day of the week
  */
 
-Astronomy.prototype.dateToDayOfWeek = function(calendarDate) {
+Astronomy.dateToDayOfWeek = function(calendarDate) {
 
     checkDateInGregorianCalendar(calendarDate);
 
     return this.julianDayNumberToDayOfWeek(this.dateToJulianDayNumber(calendarDate));
 }
 
-Astronomy.prototype.julianDayNumberToDayOfWeek = function(julianDayNumber) {
+Astronomy.julianDayNumberToDayOfWeek = function(julianDayNumber) {
 
     var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -206,7 +206,7 @@ Astronomy.prototype.julianDayNumberToDayOfWeek = function(julianDayNumber) {
  * 07 - Converting hours, minutes and seconds to decimal hours
  */
 
-Astronomy.prototype.hoursMinutesSecondsToDecimalHours = function(timeOfDay) {
+Astronomy.hoursMinutesSecondsToDecimalHours = function(timeOfDay) {
 
     var decimalHours =
         (((Math.abs(timeOfDay.seconds) / 60) + Math.abs(timeOfDay.minutes)) / 60) + Math.abs(timeOfDay.hours);
@@ -222,7 +222,7 @@ Astronomy.prototype.hoursMinutesSecondsToDecimalHours = function(timeOfDay) {
  * 08 - Converting decimal hours to hours, minutes and seconds
  */
 
-Astronomy.prototype.decimalHoursToHoursMinutesSeconds = function(decimalHours) {
+Astronomy.decimalHoursToHoursMinutesSeconds = function(decimalHours) {
 
     var totalSeconds = Math.abs(decimalHours) * 3600;
     var seconds = parseFloat(totalSeconds % 60).toFixed(3);
@@ -247,7 +247,7 @@ Astronomy.prototype.decimalHoursToHoursMinutesSeconds = function(decimalHours) {
  * 09 - Converting the local time to Universal Time (UT)
  */
 
-Astronomy.prototype.localTimeToUniversalTime = function(dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.localTimeToUniversalTime = function(dateAndTime, zoneCorrection, daylightSaving) {
 
     var calendarDate = dateAndTime.calendarDate;
     var timeOfDay = dateAndTime.timeOfDay;
@@ -275,7 +275,7 @@ Astronomy.prototype.localTimeToUniversalTime = function(dateAndTime, zoneCorrect
  * 10 - Converting UT and Greenwich calendar date to local time and date
  */
 
-Astronomy.prototype.universalTimeToLocalTime = function(dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.universalTimeToLocalTime = function(dateAndTime, zoneCorrection, daylightSaving) {
 
     var calendarDate = dateAndTime.calendarDate;
     var timeOfDay = dateAndTime.timeOfDay;
@@ -302,7 +302,7 @@ Astronomy.prototype.universalTimeToLocalTime = function(dateAndTime, zoneCorrect
  * 12 - Conversion of UT to Greenwich sidereal time (GST)
  */
 
-Astronomy.prototype.universalTimeToGreenwichSiderealTime = function(dateAndTime) {
+Astronomy.universalTimeToGreenwichSiderealTime = function(dateAndTime) {
 
     var julianDayNumber = this.dateToJulianDayNumber(dateAndTime.calendarDate);
     var s = julianDayNumber - 2451545;
@@ -319,7 +319,7 @@ Astronomy.prototype.universalTimeToGreenwichSiderealTime = function(dateAndTime)
  * 13 - Conversion of GST to UT
  */
 
-Astronomy.prototype.greenwichSiderealTimeToUniversalTime = function(dateAndTime) {
+Astronomy.greenwichSiderealTimeToUniversalTime = function(dateAndTime) {
 
     var julianDayNumber = this.dateToJulianDayNumber(dateAndTime.calendarDate);
     var s = julianDayNumber - 2451545;
@@ -340,7 +340,7 @@ Astronomy.prototype.greenwichSiderealTimeToUniversalTime = function(dateAndTime)
  * 14 - Local sidereal time (LST)
  */
 
-Astronomy.prototype.greenwichSiderealTimeToLocalSiderealTime = function(timeOfDay, longitude) {
+Astronomy.greenwichSiderealTimeToLocalSiderealTime = function(timeOfDay, longitude) {
 
     var gst = this.hoursMinutesSecondsToDecimalHours(timeOfDay);
     var offset = this.decimalDegreesToDecimalHours(longitude);
@@ -353,7 +353,7 @@ Astronomy.prototype.greenwichSiderealTimeToLocalSiderealTime = function(timeOfDa
  * 15 - Converting LST to GST
  */
 
-Astronomy.prototype.localSiderealTimeToGreenwichSiderealTime = function(timeOfDay, longitude) {
+Astronomy.localSiderealTimeToGreenwichSiderealTime = function(timeOfDay, longitude) {
 
     var lst = this.hoursMinutesSecondsToDecimalHours(timeOfDay);
     var offset = this.decimalDegreesToDecimalHours(longitude);
@@ -366,7 +366,7 @@ Astronomy.prototype.localSiderealTimeToGreenwichSiderealTime = function(timeOfDa
  * 21 - Converting between decimal degrees and degrees minutes and seconds
  */
 
-Astronomy.prototype.decimalDegreesToDegreesMinutesSeconds = function(decimalDegrees) {
+Astronomy.decimalDegreesToDegreesMinutesSeconds = function(decimalDegrees) {
 
     var totalSeconds = Math.abs(decimalDegrees) * 3600;
     var seconds = parseFloat(totalSeconds % 60).toFixed(3);
@@ -387,7 +387,7 @@ Astronomy.prototype.decimalDegreesToDegreesMinutesSeconds = function(decimalDegr
     return new DegreesMinutesSeconds(degrees, minutes, seconds);
 }
 
-Astronomy.prototype.degreesMinutesSecondsToDecimalDegrees = function(degreesMinutesSeconds) {
+Astronomy.degreesMinutesSecondsToDecimalDegrees = function(degreesMinutesSeconds) {
 
     var decimalDegrees = (((Math.abs(degreesMinutesSeconds.seconds) / 60) + Math.abs(degreesMinutesSeconds.minutes)) / 60) + Math.abs(degreesMinutesSeconds.degrees);
 
@@ -402,17 +402,17 @@ Astronomy.prototype.degreesMinutesSecondsToDecimalDegrees = function(degreesMinu
  * 22 - Converting between angles expressed in degrees and angles expressed in hours
  */
 
-Astronomy.prototype.decimalHoursToDecimalDegrees = function(decimalHours) {
+Astronomy.decimalHoursToDecimalDegrees = function(decimalHours) {
 
     return decimalHours * 15;
 }
 
-Astronomy.prototype.decimalDegreesToDecimalHours = function(decimalDegrees) {
+Astronomy.decimalDegreesToDecimalHours = function(decimalDegrees) {
 
     return decimalDegrees / 15;
 }
 
-Astronomy.prototype.hoursMinutesSecondsToDegreesMinutesSeconds = function(timeOfDay) {
+Astronomy.hoursMinutesSecondsToDegreesMinutesSeconds = function(timeOfDay) {
 
     var decimalHours = this.hoursMinutesSecondsToDecimalHours(timeOfDay);
     var decimalDegrees = this.decimalHoursToDecimalDegrees(decimalHours);
@@ -420,7 +420,7 @@ Astronomy.prototype.hoursMinutesSecondsToDegreesMinutesSeconds = function(timeOf
     return this.decimalDegreesToDegreesMinutesSeconds(decimalDegrees);
 }
 
-Astronomy.prototype.degreesMinutesSecondsToHoursMinutesSeconds = function(degreesMinutesSeconds) {
+Astronomy.degreesMinutesSecondsToHoursMinutesSeconds = function(degreesMinutesSeconds) {
 
     var decimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(degreesMinutesSeconds);
     var decimalHours = this.decimalDegreesToDecimalHours(decimalDegrees);
@@ -432,7 +432,7 @@ Astronomy.prototype.degreesMinutesSecondsToHoursMinutesSeconds = function(degree
  * 24 - Converting between right ascension and hour angle
  */
 
-Astronomy.prototype.rightAscensionToHourAngle = function(rightAscension, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.rightAscensionToHourAngle = function(rightAscension, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var ut = this.localTimeToUniversalTime(dateAndTime, zoneCorrection, daylightSaving);
     var gst = this.universalTimeToGreenwichSiderealTime(ut);
@@ -451,7 +451,7 @@ Astronomy.prototype.rightAscensionToHourAngle = function(rightAscension, longitu
     return this.decimalHoursToHoursMinutesSeconds(hourAngleDecimalHours);
 }
 
-Astronomy.prototype.hourAngleToRightAscension = function(hourAngle, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.hourAngleToRightAscension = function(hourAngle, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var ut = this.localTimeToUniversalTime(dateAndTime, zoneCorrection, daylightSaving);
     var gst = this.universalTimeToGreenwichSiderealTime(ut);
@@ -474,7 +474,7 @@ Astronomy.prototype.hourAngleToRightAscension = function(hourAngle, longitude, d
  * 25 - Equatorial to horizon coordinate conversion
  */
 
-Astronomy.prototype.hourAngleEquatorialToHorizonCoordinates = function(hourAngleEquatorialCoordinates, latitude) {
+Astronomy.hourAngleEquatorialToHorizonCoordinates = function(hourAngleEquatorialCoordinates, latitude) {
 
     var hourAngleDecimalHours = this.hoursMinutesSecondsToDecimalHours(hourAngleEquatorialCoordinates.hourAngle);
     var hourAngleDegrees = hourAngleDecimalHours * 15;
@@ -510,7 +510,7 @@ Astronomy.prototype.hourAngleEquatorialToHorizonCoordinates = function(hourAngle
  * 26 - Horizon to equatorial coordinate conversion
  */
 
-Astronomy.prototype.horizonToHourAngleEquatorialCoordinates = function(horizonCoordinates, latitude) {
+Astronomy.horizonToHourAngleEquatorialCoordinates = function(horizonCoordinates, latitude) {
 
     var azimuthDegrees = this.degreesMinutesSecondsToDecimalDegrees(horizonCoordinates.azimuth);
     var azimuthRadians = degreesToRadians(azimuthDegrees);
@@ -546,7 +546,7 @@ Astronomy.prototype.horizonToHourAngleEquatorialCoordinates = function(horizonCo
  * 27 - Ecliptic to equatorial coordinate conversion
  */
 
-Astronomy.prototype.meanObliquityOfTheEcliptic = function(calendarDate) {
+Astronomy.meanObliquityOfTheEcliptic = function(calendarDate) {
 
     var dateJD = this.dateToJulianDayNumber(calendarDate);
     var epochJD = this.dateToJulianDayNumber(new CalendarDate(2000, 1, 1.5));
@@ -565,7 +565,7 @@ Astronomy.prototype.meanObliquityOfTheEcliptic = function(calendarDate) {
     return obliquity;
 }
 
-Astronomy.prototype.eclipticToRightAscensionEquatorialCoordinates = function(eclipticCoordinates, calendarDate) {
+Astronomy.eclipticToRightAscensionEquatorialCoordinates = function(eclipticCoordinates, calendarDate) {
 
     var eclipticLongitudeDegrees = this.degreesMinutesSecondsToDecimalDegrees(eclipticCoordinates.eclipticLongitude);
     var eclipticLongitudeRadians = degreesToRadians(eclipticLongitudeDegrees);
@@ -602,7 +602,7 @@ Astronomy.prototype.eclipticToRightAscensionEquatorialCoordinates = function(ecl
  * 28 - Equatorial to ecliptic coordinate conversion
  */
 
-Astronomy.prototype.rightAscensionEquatorialToEclipticCoordinates = function(rightAscensionEquatorialCoordinates, calendarDate) {
+Astronomy.rightAscensionEquatorialToEclipticCoordinates = function(rightAscensionEquatorialCoordinates, calendarDate) {
 
     var rightAscensionDegrees = this.decimalHoursToDecimalDegrees(this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension));
     var rightAscensionRadians = degreesToRadians(rightAscensionDegrees);
@@ -638,7 +638,7 @@ Astronomy.prototype.rightAscensionEquatorialToEclipticCoordinates = function(rig
  * 29 - Equatorial to galactic coordinate conversion
  */
 
-Astronomy.prototype.rightAscensionEquatorialToGalacticCoordinates = function(rightAscensionEquatorialCoordinates) {
+Astronomy.rightAscensionEquatorialToGalacticCoordinates = function(rightAscensionEquatorialCoordinates) {
 
     var rightAscensionDegrees = this.decimalHoursToDecimalDegrees(this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension));
     var rightAscensionRadians = degreesToRadians(rightAscensionDegrees);
@@ -669,7 +669,7 @@ Astronomy.prototype.rightAscensionEquatorialToGalacticCoordinates = function(rig
  * 30 - Galatic to equatorial coordinate conversion
  */
 
-Astronomy.prototype.galacticToRightAscensionEquatorialCoordinates = function(galacticCoordinates) {
+Astronomy.galacticToRightAscensionEquatorialCoordinates = function(galacticCoordinates) {
 
     var galacticLongitudeDegrees = this.degreesMinutesSecondsToDecimalDegrees(galacticCoordinates.galacticLongitude);
     var galacticLongitudeRadians = degreesToRadians(galacticLongitudeDegrees);
@@ -703,7 +703,7 @@ Astronomy.prototype.galacticToRightAscensionEquatorialCoordinates = function(gal
  * 31 - Generalised coordinate transformations
  */
 
-Astronomy.prototype.hourAngleEquatorialToRightAscensionEquatorialCoordinates = function(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.hourAngleEquatorialToRightAscensionEquatorialCoordinates = function(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var hourAngle = hourAngleEquatorialCoordinates.hourAngle;
     var declination = hourAngleEquatorialCoordinates.declination;
@@ -712,7 +712,7 @@ Astronomy.prototype.hourAngleEquatorialToRightAscensionEquatorialCoordinates = f
     return new RightAscensionEquatorialCoordinates(rightAscension, declination);
 }
 
-Astronomy.prototype.rightAscensionEquatorialToHourAngleEquatorialCoordinates = function(rightAscensionEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.rightAscensionEquatorialToHourAngleEquatorialCoordinates = function(rightAscensionEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscension = rightAscensionEquatorialCoordinates.rightAscension;
     var declination = rightAscensionEquatorialCoordinates.declination;
@@ -722,7 +722,7 @@ Astronomy.prototype.rightAscensionEquatorialToHourAngleEquatorialCoordinates = f
     return new HourAngleEquatorialCoordinates(hourAngle, declination);
 }
 
-Astronomy.prototype.eclipticToGalacticCoordinates = function(eclipticCoordinates, calendarDate) {
+Astronomy.eclipticToGalacticCoordinates = function(eclipticCoordinates, calendarDate) {
 
     var rightAscensionEquatorialCoordinates = this.eclipticToRightAscensionEquatorialCoordinates(eclipticCoordinates, calendarDate);
     var galacticCoordinates =  this.rightAscensionEquatorialToGalacticCoordinates(rightAscensionEquatorialCoordinates);
@@ -730,7 +730,7 @@ Astronomy.prototype.eclipticToGalacticCoordinates = function(eclipticCoordinates
     return galacticCoordinates;
 }
 
-Astronomy.prototype.galacticToEclipticCoordinates = function(galacticCoordinates, calendarDate) {
+Astronomy.galacticToEclipticCoordinates = function(galacticCoordinates, calendarDate) {
 
     var rightAscensionEquatorialCoordinates = this.galacticToRightAscensionEquatorialCoordinates(galacticCoordinates);
     var eclipticCoordinates =  this.rightAscensionEquatorialToEclipticCoordinates(rightAscensionEquatorialCoordinates, calendarDate);
@@ -738,7 +738,7 @@ Astronomy.prototype.galacticToEclipticCoordinates = function(galacticCoordinates
     return eclipticCoordinates;
 }
 
-Astronomy.prototype.hourAngleEquatorialToEclipticCoordinates = function(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.hourAngleEquatorialToEclipticCoordinates = function(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates =
         this.hourAngleEquatorialToRightAscensionEquatorialCoordinates(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving)
@@ -747,7 +747,7 @@ Astronomy.prototype.hourAngleEquatorialToEclipticCoordinates = function(hourAngl
     return eclipticCoordinates;
 }
 
-Astronomy.prototype.eclipticToHourAngleEquatorialCoordinates = function(eclipticCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.eclipticToHourAngleEquatorialCoordinates = function(eclipticCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates = this.eclipticToRightAscensionEquatorialCoordinates(eclipticCoordinates, dateAndTime.calendarDate);
     var hourAngleEquatorialCoordinates =
@@ -756,7 +756,7 @@ Astronomy.prototype.eclipticToHourAngleEquatorialCoordinates = function(ecliptic
     return hourAngleEquatorialCoordinates;
 }
 
-Astronomy.prototype.hourAngleEquatorialToGalacticCoordinates = function(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.hourAngleEquatorialToGalacticCoordinates = function(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates =
         this.hourAngleEquatorialToRightAscensionEquatorialCoordinates(hourAngleEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving)
@@ -765,7 +765,7 @@ Astronomy.prototype.hourAngleEquatorialToGalacticCoordinates = function(hourAngl
     return galacticCoordinates;
 }
 
-Astronomy.prototype.galacticToHourAngleEquatorialCoordinates = function(galacticCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.galacticToHourAngleEquatorialCoordinates = function(galacticCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates = this.galacticToRightAscensionEquatorialCoordinates(galacticCoordinates);
     var hourAngleEquatorialCoordinates =
@@ -774,7 +774,7 @@ Astronomy.prototype.galacticToHourAngleEquatorialCoordinates = function(galactic
     return hourAngleEquatorialCoordinates;
 }
 
-Astronomy.prototype.horizonToRightAscensionEquatorialCoordinates = function(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.horizonToRightAscensionEquatorialCoordinates = function(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var hourAngleEquatorialCoordinates = this.horizonToHourAngleEquatorialCoordinates(horizonCoordinates, latitude);
     var rightAscensionEquatorialCoordinates =
@@ -783,7 +783,7 @@ Astronomy.prototype.horizonToRightAscensionEquatorialCoordinates = function(hori
     return rightAscensionEquatorialCoordinates;
 }
 
-Astronomy.prototype.rightAscensionEquatorialToHorizonCoordinates = function(rightAscensionEquatorialCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.rightAscensionEquatorialToHorizonCoordinates = function(rightAscensionEquatorialCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var hourAngleEquatorialCoordinates =
         this.rightAscensionEquatorialToHourAngleEquatorialCoordinates(rightAscensionEquatorialCoordinates, longitude, dateAndTime, zoneCorrection, daylightSaving);
@@ -792,7 +792,7 @@ Astronomy.prototype.rightAscensionEquatorialToHorizonCoordinates = function(righ
     return horizonCoordinates;
 }
 
-Astronomy.prototype.horizonToEclipticCoordinates = function(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.horizonToEclipticCoordinates = function(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates =
         this.horizonToRightAscensionEquatorialCoordinates(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving);
@@ -801,7 +801,7 @@ Astronomy.prototype.horizonToEclipticCoordinates = function(horizonCoordinates, 
     return eclipticCoordinates;
 }
 
-Astronomy.prototype.eclipticToHorizonCoordinates = function(eclipticCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.eclipticToHorizonCoordinates = function(eclipticCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates = this.eclipticToRightAscensionEquatorialCoordinates(eclipticCoordinates, dateAndTime.calendarDate);
     var horizonCoordinates =
@@ -810,7 +810,7 @@ Astronomy.prototype.eclipticToHorizonCoordinates = function(eclipticCoordinates,
     return horizonCoordinates;
 }
 
-Astronomy.prototype.horizonToGalacticCoordinates = function(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.horizonToGalacticCoordinates = function(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates =
         this.horizonToRightAscensionEquatorialCoordinates(horizonCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving);
@@ -819,7 +819,7 @@ Astronomy.prototype.horizonToGalacticCoordinates = function(horizonCoordinates, 
     return galacticCoordinates;
 }
 
-Astronomy.prototype.galacticToHorizonCoordinates = function(galacticCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
+Astronomy.galacticToHorizonCoordinates = function(galacticCoordinates, latitude, longitude, dateAndTime, zoneCorrection, daylightSaving) {
 
     var rightAscensionEquatorialCoordinates = this.galacticToRightAscensionEquatorialCoordinates(galacticCoordinates);
     var horizonCoordinates =
@@ -832,7 +832,7 @@ Astronomy.prototype.galacticToHorizonCoordinates = function(galacticCoordinates,
  * 32 - The angle between two celestial objects
  */
 
-Astronomy.prototype.angleBetweenRightAscensionEquatorialCoordinates = function(rightAscensionEquatorialCoordinates1, rightAscensionEquatorialCoordinates2) {
+Astronomy.angleBetweenRightAscensionEquatorialCoordinates = function(rightAscensionEquatorialCoordinates1, rightAscensionEquatorialCoordinates2) {
 
     var rightAscensionDegrees1 = this.decimalHoursToDecimalDegrees(this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates1.rightAscension));
     var rightAscensionRadians1 = degreesToRadians(rightAscensionDegrees1);
@@ -856,7 +856,7 @@ Astronomy.prototype.angleBetweenRightAscensionEquatorialCoordinates = function(r
     return this.decimalDegreesToDegreesMinutesSeconds(angleDegrees);
 }
 
-Astronomy.prototype.angleBetweenEclipticCoordinates = function(eclipticCoordinates1, eclipticCoordinates2) {
+Astronomy.angleBetweenEclipticCoordinates = function(eclipticCoordinates1, eclipticCoordinates2) {
 
     var eclipticLongitudeDegrees1 = this.degreesMinutesSecondsToDecimalDegrees(eclipticCoordinates1.eclipticLongitude);
     var eclipticLongitudeRadians1 = degreesToRadians(eclipticLongitudeDegrees1);
@@ -884,7 +884,7 @@ Astronomy.prototype.angleBetweenEclipticCoordinates = function(eclipticCoordinat
  * 35 - Nutation
  */
 
-Astronomy.prototype.nutation = function(calendarDate) {
+Astronomy.nutation = function(calendarDate) {
 
     var dateJD = this.dateToJulianDayNumber(calendarDate);
     var epochJD = this.dateToJulianDayNumber(new CalendarDate(1900, 1, 0.5));
@@ -1092,11 +1092,6 @@ function checkDateInGregorianCalendar(calendarDate) {
 function isLeapYear(year) {
 
     return (year % 4 == 0 && !((year % 100 == 0) && (year % 400 != 0)));
-}
-
-function daysInYear(year) {
-
-    return isLeapYear(year) ? 366 : 365;
 }
 
 function reduceValueToZeroToRange(value, range) {
