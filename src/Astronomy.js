@@ -368,34 +368,14 @@ Astronomy.localSiderealTimeToGreenwichSiderealTime = function(timeOfDay, longitu
 
 Astronomy.decimalDegreesToDegreesMinutesSeconds = function(decimalDegrees) {
 
-    var totalSeconds = Math.abs(decimalDegrees) * 3600;
-    var seconds = parseFloat(totalSeconds % 60).toFixed(3);
+    var timeOfDay = this.decimalHoursToHoursMinutesSeconds(decimalDegrees);
 
-    if (seconds == 60) {
-        seconds = 0;
-        totalSeconds += 60;
-    }
-
-    var minutes = Math.floor(totalSeconds / 60) % 60;
-
-    var degrees = Math.floor(totalSeconds / 3600);
-
-    if (decimalDegrees < 0) {
-        degrees *= -1;
-    }
-
-    return new DegreesMinutesSeconds(degrees, minutes, seconds);
+    return new DegreesMinutesSeconds(timeOfDay.hours, timeOfDay.minutes, timeOfDay.seconds);
 }
 
 Astronomy.degreesMinutesSecondsToDecimalDegrees = function(degreesMinutesSeconds) {
 
-    var decimalDegrees = (((Math.abs(degreesMinutesSeconds.seconds) / 60) + Math.abs(degreesMinutesSeconds.minutes)) / 60) + Math.abs(degreesMinutesSeconds.degrees);
-
-    if ((degreesMinutesSeconds.degrees < 0) || (degreesMinutesSeconds.minutes < 0) || (degreesMinutesSeconds.seconds < 0)) {
-        decimalDegrees *= -1;
-    }
-
-    return decimalDegrees;
+    return this.hoursMinutesSecondsToDecimalHours(new TimeOfDay(degreesMinutesSeconds.degrees, degreesMinutesSeconds.minutes, degreesMinutesSeconds.seconds));
 }
 
 /*
