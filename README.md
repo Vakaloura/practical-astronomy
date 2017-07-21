@@ -1,6 +1,6 @@
 # practical-astronomy
 
-Copyright © 2016 Wayne D Grant
+Copyright © 2017 Wayne D Grant
 
 Licensed under the MIT License
 

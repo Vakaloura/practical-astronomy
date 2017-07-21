@@ -1,4 +1,4 @@
-/* Copyright 2016 Wayne D Grant (www.waynedgrant.com)
+/* Copyright 2017 Wayne D Grant (www.waynedgrant.com)
    Licensed under the MIT License */
 
 function AstronomyError(message) {
