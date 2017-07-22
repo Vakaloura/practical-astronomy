@@ -861,6 +861,135 @@ Astronomy.angleBetweenEclipticCoordinates = function(eclipticCoordinates1, eclip
 }
 
 /*
+ * 33 - Rising and setting
+ */
+
+// TODO - add to UT?
+Astronomy.risingLocalSiderealTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+
+    var raDecimalHours = this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension);
+    var raDecimalDegrees = this.decimalHoursToDecimalDegrees(raDecimalHours);
+    var raRadians = degreesToRadians(raDecimalDegrees);
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var verticalShiftRadians = degreesToRadians(verticalShift);
+    var latitudeRadians = degreesToRadians(latitude);
+
+    var aRadians = 0;
+
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+
+        aRadians = Math.acos(
+            -((Math.sin(verticalShiftRadians) + (Math.sin(latitudeRadians) * Math.sin(decRadians))) / (Math.cos(latitudeRadians) * Math.cos(decRadians)))
+        );
+    }
+
+    var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians - aRadians))
+
+    var settingLocalSiderealTime = i - (24 * Math.floor(i / 24));
+
+    return settingLocalSiderealTime;
+}
+
+// TODO - add to UT?
+Astronomy.settingLocalSiderealTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+
+    var raDecimalHours = this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension);
+    var raDecimalDegrees = this.decimalHoursToDecimalDegrees(raDecimalHours);
+    var raRadians = degreesToRadians(raDecimalDegrees);
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var verticalShiftRadians = degreesToRadians(verticalShift);
+    var latitudeRadians = degreesToRadians(latitude);
+
+    var aRadians = 0;
+
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+
+        aRadians = Math.acos(
+            -((Math.sin(verticalShiftRadians) + (Math.sin(latitudeRadians) * Math.sin(decRadians))) / (Math.cos(latitudeRadians) * Math.cos(decRadians)))
+        );
+    }
+
+    var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians + aRadians))
+
+    var settingLocalSiderealTime = i - (24 * Math.floor(i / 24));
+
+    return settingLocalSiderealTime;
+}
+
+Astronomy.risingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var verticalShiftRadians = degreesToRadians(verticalShift);
+    var latitudeRadians = degreesToRadians(latitude);
+
+    var aDegrees = 0;
+
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+
+        aDegrees = radiansToDegrees(
+            Math.acos(
+                (Math.sin(decRadians) + (Math.sin(verticalShiftRadians) * Math.sin(latitudeRadians))) / (Math.cos(verticalShiftRadians) * Math.cos(latitudeRadians))
+            )
+        );
+    }
+
+    var risingAzimuthDegrees = aDegrees - (360 * Math.floor(aDegrees / 360));
+
+    return risingAzimuthDegrees;
+}
+
+Astronomy.settingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var verticalShiftRadians = degreesToRadians(verticalShift);
+    var latitudeRadians = degreesToRadians(latitude);
+
+    var aDegrees = 0;
+
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+
+        aDegrees = radiansToDegrees(
+            Math.acos(
+                (Math.sin(decRadians) + (Math.sin(verticalShiftRadians) * Math.sin(latitudeRadians))) / (Math.cos(verticalShiftRadians) * Math.cos(latitudeRadians))
+            )
+        );
+    }
+
+    var settingAzimuthDegrees = (360 - aDegrees) - (360 * Math.floor((360 - aDegrees) / 360));
+
+    return settingAzimuthDegrees;
+}
+
+Astronomy.risingSettingStatus = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination); // C
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var verticalShiftRadians = degreesToRadians(verticalShift);
+    var latitudeRadians = degreesToRadians(latitude);
+
+    var risingSettingStatus = -(Math.sin(verticalShiftRadians) + (Math.sin(latitudeRadians) * Math.sin(decRadians))) / (Math.cos(latitudeRadians) * Math.cos(decRadians));
+
+    if (risingSettingStatus >= 1) { // TODO - enum
+        return "never rises"
+    } else if (risingSettingStatus <= -1) {
+        return "circumpolar";
+    } else {
+        return "OK";
+    }
+}
+
+/*
  * 35 - Nutation
  */
 

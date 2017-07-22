@@ -1027,6 +1027,113 @@
                 );
             });
 
+            QUnit.module("33 - Rising and setting")
+
+            QUnit.test("Rising setting status: OK", function(assert) {
+
+                assert.equal(
+                    Astronomy.risingSettingStatus(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30 // latitude
+                    ),
+                    "OK"
+                );
+            });
+
+            QUnit.test("Rising setting status: never rises", function(assert) {
+
+                assert.equal(
+                    Astronomy.risingSettingStatus(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        -70 // latitude
+                    ),
+                    "never rises"
+                );
+            });
+
+            QUnit.test("Rising setting status: circumpolar", function(assert) {
+
+                assert.equal(
+                    Astronomy.risingSettingStatus(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        39, // verticalShift
+                        30 // latitude
+                    ),
+                    "circumpolar"
+                );
+            });
+
+            QUnit.test("Rising local sidereal time", function(assert) {
+
+                assert.equal(
+                    Astronomy.risingLocalSiderealTime(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30 // latitude
+                    ),
+                    16.721728272117623
+                );
+            });
+
+            QUnit.test("Setting local sidereal time", function(assert) {
+
+                assert.equal(
+                    Astronomy.settingLocalSiderealTime(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30 // latitude
+                    ),
+                    6.589382838993483
+                );
+            });
+
+            QUnit.test("Rising azimuth degrees", function(assert) {
+
+                assert.equal(
+                    Astronomy.risingAzimuthDegrees(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30 // latitude
+                    ),
+                    64.36234803851119
+                );
+            });
+
+            QUnit.test("Setting azimuth degrees", function(assert) {
+
+                assert.equal(
+                    Astronomy.settingAzimuthDegrees(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30 // latitude
+                    ),
+                    295.6376519614888
+                );
+            });
+
             QUnit.module("35 - Nutation")
 
             QUnit.test("Nutation", function(assert) {
