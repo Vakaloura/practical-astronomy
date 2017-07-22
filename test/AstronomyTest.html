@@ -1104,6 +1104,40 @@
                 );
             });
 
+            QUnit.test("Rising universal time", function(assert) {
+
+                assert.equal(
+                    Astronomy.risingUniversalTime(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30, // latitude
+                        64, // longitude
+                        new CalendarDate(2010, 8, 24)
+                    ).toString(),
+                    new TimeOfDay(14, 16, 0).toString()
+                );
+            });
+
+            QUnit.test("Setting universal time", function(assert) {
+
+                assert.equal(
+                    Astronomy.settingUniversalTime(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(23, 39, 20), // right ascension
+                            new DegreesMinutesSeconds(21, 42, 0) // declination
+                        ),
+                        0.5667, // verticalShift
+                        30, // latitude
+                        64, // longitude
+                        new CalendarDate(2010, 8, 24)
+                    ).toString(),
+                    new TimeOfDay(4, 10, 0).toString()
+                );
+            });
+
             QUnit.test("Rising azimuth degrees", function(assert) {
 
                 assert.equal(
