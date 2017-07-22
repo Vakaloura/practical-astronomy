@@ -864,8 +864,7 @@ Astronomy.angleBetweenEclipticCoordinates = function(eclipticCoordinates1, eclip
  * 33 - Rising and setting
  */
 
-// TODO - explicitly as LST hours or remove?
-Astronomy.risingLocalSiderealTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+Astronomy.risingLocalSiderealTimeHours = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
 
     var raDecimalHours = this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension);
     var raDecimalDegrees = this.decimalHoursToDecimalDegrees(raDecimalHours);
@@ -888,13 +887,12 @@ Astronomy.risingLocalSiderealTime = function(rightAscensionEquatorialCoordinates
 
     var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians - aRadians))
 
-    var settingLocalSiderealTime = i - (24 * Math.floor(i / 24));
+    var settingLocalSiderealTimeHours = i - (24 * Math.floor(i / 24));
 
-    return settingLocalSiderealTime;
+    return settingLocalSiderealTimeHours;
 }
 
-// TODO - hours as LST hours or remove?
-Astronomy.settingLocalSiderealTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+Astronomy.settingLocalSiderealTimeHours = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
 
     var raDecimalHours = this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension);
     var raDecimalDegrees = this.decimalHoursToDecimalDegrees(raDecimalHours);
@@ -917,14 +915,14 @@ Astronomy.settingLocalSiderealTime = function(rightAscensionEquatorialCoordinate
 
     var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians + aRadians))
 
-    var settingLocalSiderealTime = i - (24 * Math.floor(i / 24));
+    var settingLocalSiderealTimeHours = i - (24 * Math.floor(i / 24));
 
-    return settingLocalSiderealTime;
+    return settingLocalSiderealTimeHours;
 }
 
 Astronomy.risingUniversalTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude, longitude, calendarDate) {
 
-    var risingLocalSiderealTimeHours = this.risingLocalSiderealTime(rightAscensionEquatorialCoordinates, verticalShift, latitude);
+    var risingLocalSiderealTimeHours = this.risingLocalSiderealTimeHours(rightAscensionEquatorialCoordinates, verticalShift, latitude);
     var risingLocalSiderealTime = this.decimalHoursToHoursMinutesSeconds(risingLocalSiderealTimeHours);
 
     var gst = this.localSiderealTimeToGreenwichSiderealTime(risingLocalSiderealTime, longitude);
@@ -935,7 +933,7 @@ Astronomy.risingUniversalTime = function(rightAscensionEquatorialCoordinates, ve
 
 Astronomy.settingUniversalTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude, longitude, calendarDate) {
 
-    var settingLocalSiderealTimeHours = this.settingLocalSiderealTime(rightAscensionEquatorialCoordinates, verticalShift, latitude);
+    var settingLocalSiderealTimeHours = this.settingLocalSiderealTimeHours(rightAscensionEquatorialCoordinates, verticalShift, latitude);
     var settingLocalSiderealTime = this.decimalHoursToHoursMinutesSeconds(settingLocalSiderealTimeHours);
 
     var gst = this.localSiderealTimeToGreenwichSiderealTime(settingLocalSiderealTime, longitude);
@@ -952,7 +950,7 @@ Astronomy.risingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, v
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var aDegrees = 0;
+    var aDegrees = 0; // TODO - test this case
 
     if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
 
@@ -976,7 +974,7 @@ Astronomy.settingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, 
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var aDegrees = 0;
+    var aDegrees = 0; // TODO - test this case
 
     if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
 

@@ -1074,10 +1074,10 @@
                 );
             });
 
-            QUnit.test("Rising local sidereal time", function(assert) {
+            QUnit.test("Rising local sidereal time in hours", function(assert) {
 
                 assert.equal(
-                    Astronomy.risingLocalSiderealTime(
+                    Astronomy.risingLocalSiderealTimeHours(
                         new RightAscensionEquatorialCoordinates(
                             new TimeOfDay(23, 39, 20), // right ascension
                             new DegreesMinutesSeconds(21, 42, 0) // declination
@@ -1089,10 +1089,10 @@
                 );
             });
 
-            QUnit.test("Setting local sidereal time", function(assert) {
+            QUnit.test("Setting local sidereal time in hours", function(assert) {
 
                 assert.equal(
-                    Astronomy.settingLocalSiderealTime(
+                    Astronomy.settingLocalSiderealTimeHours(
                         new RightAscensionEquatorialCoordinates(
                             new TimeOfDay(23, 39, 20), // right ascension
                             new DegreesMinutesSeconds(21, 42, 0) // declination
