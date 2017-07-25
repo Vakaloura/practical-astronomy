@@ -2,7 +2,16 @@
    Licensed under the MIT License */
 
 // Shortcuts to Math functions
-var pi = Math.PI, sin = Math.sin, cos = Math.cos, tan = Math.tan, asin = Math.asin, atan2 = Math.atan2, acos = Math.acos, floor = Math.floor, round = Math.round, abs = Math.abs;
+var pi    = Math.PI,
+    sin   = Math.sin,
+    cos   = Math.cos,
+    tan   = Math.tan,
+    asin  = Math.asin,
+    atan2 = Math.atan2,
+    acos  = Math.acos,
+    floor = Math.floor,
+    round = Math.round,
+    abs   = Math.abs;
 
 var Astronomy = {};
 
