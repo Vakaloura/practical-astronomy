@@ -8,6 +8,9 @@ function AstronomyError(message) {
 
 AstronomyError.prototype = Error.prototype;
 
+// Shortcuts to Math functions
+var pi = Math.PI, sin = Math.sin, cos = Math.cos, tan = Math.tan, asin = Math.asin, atan2 = Math.atan2, acos = Math.acos, floor = Math.floor, round = Math.round, abs = Math.abs;
+
 var Astronomy = {};
 
 /*
@@ -43,19 +46,19 @@ Astronomy.dateOfEaster = function(year) {
     checkYearInGregorianCalendar(year);
 
     var a = year % 19;
-    var b = Math.floor(year / 100);
+    var b = floor(year / 100);
     var c = year % 100;
-    var d = Math.floor(b / 4);
+    var d = floor(b / 4);
     var e = b % 4;
-    var f = Math.floor((b + 8) / 25);
-    var g = Math.floor((b - f + 1) / 3);
+    var f = floor((b + 8) / 25);
+    var g = floor((b - f + 1) / 3);
     var h = ((19 * a) + b - d - g + 15) % 30;
-    var i = Math.floor(c / 4);
+    var i = floor(c / 4);
     var k = c % 4;
     var l = ((32 + (2 * e) + (2 * i) - h - k) % 7);
-    var m = Math.floor((a + (11 * h) + (22 * l)) / 451);
+    var m = floor((a + (11 * h) + (22 * l)) / 451);
 
-    var month = Math.floor((h + l - (7 * m) + 114) / 31);
+    var month = floor((h + l - (7 * m) + 114) / 31);
     var day = ((h + l - (7 * m) + 114) % 31) + 1;
 
     return new CalendarDate(year, month, day);
@@ -76,13 +79,13 @@ Astronomy.dateToDayNumber = function(calendarDate) {
 
     if (calendarDate.month > 2) {
         a = calendarDate.month + 1;
-        b = Math.floor(a * 30.6);
+        b = floor(a * 30.6);
         c = b - (isLeapYear(calendarDate.year) ? 62 : 63);
         dayNumber = c + calendarDate.day;
     } else {
         a = calendarDate.month - 1;
         b = a * (isLeapYear(calendarDate.year) ? 62 : 63);
-        c = Math.floor(b / 2);
+        c = floor(b / 2);
         dayNumber = c + calendarDate.day;
     }
 
@@ -116,19 +119,19 @@ Astronomy.dateToJulianDayNumber = function(calendarDate) {
     var b = 0;
 
     if (dateInGregorianCalendar(calendarDate)) {
-        var a = Math.floor(y / 100);
-        var b = (2 - a + Math.floor(a / 4));
+        var a = floor(y / 100);
+        var b = (2 - a + floor(a / 4));
     }
 
     var c = 0;
 
     if (y < 0) {
-        c = Math.floor((365.25 * y) - 0.75);
+        c = floor((365.25 * y) - 0.75);
     } else {
-        c = Math.floor(365.25 * y);
+        c = floor(365.25 * y);
     }
 
-    var d = Math.floor(30.6001 * (m + 1));
+    var d = floor(30.6001 * (m + 1));
 
     return b + c + d + calendarDate.day + 1720994.5;
 }
@@ -148,17 +151,17 @@ Astronomy.julianDayNumberToDate = function(julianDayNumber) {
         throw new AstronomyError("julian day number must be in Gregorian Calendar, i.e. >= 2299160.5");
     }
 
-    var i = Math.floor(julianDayNumber + 0.5);
+    var i = floor(julianDayNumber + 0.5);
     var f = (julianDayNumber + 0.5) - i;
 
-    var a = Math.floor((i - 1867216.25) / 36524.25);
-    var b = i + 1 + a - Math.floor(a / 4);
+    var a = floor((i - 1867216.25) / 36524.25);
+    var b = i + 1 + a - floor(a / 4);
     var c = b + 1524;
-    var d = Math.floor((c - 122.1) / 365.25);
-    var e = Math.floor(365.25 * d);
-    var g = Math.floor((c - e) / 30.6001);
+    var d = floor((c - 122.1) / 365.25);
+    var e = floor(365.25 * d);
+    var g = floor((c - e) / 30.6001);
 
-    var day = c - e + f - Math.floor(30.6001 * g);
+    var day = c - e + f - floor(30.6001 * g);
 
     var month;
 
@@ -197,7 +200,7 @@ Astronomy.julianDayNumberToDayOfWeek = function(julianDayNumber) {
     var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     var a = (julianDayNumber + 1.5) / 7;
-    var n = Math.round((a % 1) * 7);
+    var n = round((a % 1) * 7);
 
     return daysOfWeek[n];
 }
@@ -209,7 +212,7 @@ Astronomy.julianDayNumberToDayOfWeek = function(julianDayNumber) {
 Astronomy.hoursMinutesSecondsToDecimalHours = function(timeOfDay) {
 
     var decimalHours =
-        (((Math.abs(timeOfDay.seconds) / 60) + Math.abs(timeOfDay.minutes)) / 60) + Math.abs(timeOfDay.hours);
+        (((abs(timeOfDay.seconds) / 60) + abs(timeOfDay.minutes)) / 60) + abs(timeOfDay.hours);
 
     if ((timeOfDay.hours < 0) || (timeOfDay.minutes < 0) || (timeOfDay.seconds < 0)) {
         decimalHours *= -1;
@@ -224,7 +227,7 @@ Astronomy.hoursMinutesSecondsToDecimalHours = function(timeOfDay) {
 
 Astronomy.decimalHoursToHoursMinutesSeconds = function(decimalHours) {
 
-    var totalSeconds = Math.abs(decimalHours) * 3600;
+    var totalSeconds = abs(decimalHours) * 3600;
     var seconds = parseFloat((totalSeconds % 60).toFixed(3));
 
     if (seconds == 60) {
@@ -232,9 +235,9 @@ Astronomy.decimalHoursToHoursMinutesSeconds = function(decimalHours) {
         totalSeconds += 60;
     }
 
-    var minutes = Math.floor(totalSeconds / 60) % 60;
+    var minutes = floor(totalSeconds / 60) % 60;
 
-    var hours = Math.floor(totalSeconds / 3600);
+    var hours = floor(totalSeconds / 3600);
 
     if (decimalHours < 0) {
         hours *= -1;
@@ -261,7 +264,7 @@ Astronomy.localTimeToUniversalTime = function(dateAndTime, zoneCorrection, dayli
     var year = greenwichCalendarDate.year;
     var month = greenwichCalendarDate.month;
     var decimalDay = greenwichCalendarDate.day;
-    var day = Math.floor(decimalDay);
+    var day = floor(decimalDay);
 
     var calendarDate = new CalendarDate(year, month, day);
 
@@ -288,7 +291,7 @@ Astronomy.universalTimeToLocalTime = function(dateAndTime, zoneCorrection, dayli
     var year = greenwichCalendarDate.year;
     var month = greenwichCalendarDate.month;
     var decimalDay = greenwichCalendarDate.day;
-    var day = Math.floor(decimalDay);
+    var day = floor(decimalDay);
 
     var calendarDate = new CalendarDate(year, month, day);
 
@@ -466,19 +469,19 @@ Astronomy.hourAngleEquatorialToHorizonCoordinates = function(hourAngleEquatorial
     var latitudeRadians = degreesToRadians(latitude);
 
     var sinAltitude =
-        Math.sin(declinationRadians) * Math.sin(latitudeRadians) +
-        Math.cos(declinationRadians) * Math.cos(latitudeRadians) * Math.cos(hourAngleRadians);
+        sin(declinationRadians) * sin(latitudeRadians) +
+        cos(declinationRadians) * cos(latitudeRadians) * cos(hourAngleRadians);
 
-    var altitudeRadians = Math.asin(sinAltitude);
+    var altitudeRadians = asin(sinAltitude);
     var altitudeDegrees = radiansToDegrees(altitudeRadians);
 
-    var y = -Math.cos(declinationRadians) * Math.cos(latitudeRadians) * Math.sin(hourAngleRadians)
-    var x = Math.sin(declinationRadians) - Math.sin(latitudeRadians) * sinAltitude;
+    var y = -cos(declinationRadians) * cos(latitudeRadians) * sin(hourAngleRadians)
+    var x = sin(declinationRadians) - sin(latitudeRadians) * sinAltitude;
 
-    var azimuthRadians = Math.atan2(y, x);
+    var azimuthRadians = atan2(y, x);
 
     var azimuthDegrees = radiansToDegrees(azimuthRadians);
-    azimuthDegrees = azimuthDegrees - (360 * Math.floor(azimuthDegrees / 360));
+    azimuthDegrees = azimuthDegrees - (360 * floor(azimuthDegrees / 360));
 
     return new HorizonCoordinates(
         this.decimalDegreesToDegreesMinutesSeconds(azimuthDegrees),
@@ -501,19 +504,19 @@ Astronomy.horizonToHourAngleEquatorialCoordinates = function(horizonCoordinates,
     var latitudeRadians = degreesToRadians(latitude);
 
     var sinDeclination =
-        Math.sin(altitudeRadians) * Math.sin(latitudeRadians) +
-        Math.cos(altitudeRadians) * Math.cos(latitudeRadians) * Math.cos(azimuthRadians);
+        sin(altitudeRadians) * sin(latitudeRadians) +
+        cos(altitudeRadians) * cos(latitudeRadians) * cos(azimuthRadians);
 
-    var declinationRadians = Math.asin(sinDeclination);
+    var declinationRadians = asin(sinDeclination);
     var declinationDegrees = radiansToDegrees(declinationRadians);
 
-    var y = -Math.cos(altitudeRadians) * Math.cos(latitudeRadians) * Math.sin(azimuthRadians);
-    var x = Math.sin(altitudeRadians) - Math.sin(latitudeRadians) * sinDeclination;
+    var y = -cos(altitudeRadians) * cos(latitudeRadians) * sin(azimuthRadians);
+    var x = sin(altitudeRadians) - sin(latitudeRadians) * sinDeclination;
 
-    var hourAngleRadians = Math.atan2(y, x);
+    var hourAngleRadians = atan2(y, x);
 
     var hourAngleDegrees = radiansToDegrees(hourAngleRadians);
-    hourAngleDegrees = hourAngleDegrees - (360 * Math.floor(hourAngleDegrees / 360));
+    hourAngleDegrees = hourAngleDegrees - (360 * floor(hourAngleDegrees / 360));
 
     var hourAngleDecimalHours = this.decimalDegreesToDecimalHours(hourAngleDegrees);
 
@@ -557,19 +560,19 @@ Astronomy.eclipticToRightAscensionEquatorialCoordinates = function(eclipticCoord
     var obliquityRadians = degreesToRadians(obliquityDegrees);
 
     var sinDeclination =
-        Math.sin(eclipticLatitudeRadians) * Math.cos(obliquityRadians) +
-        Math.cos(eclipticLatitudeRadians) * Math.sin(obliquityRadians) * Math.sin(eclipticLongitudeRadians);
+        sin(eclipticLatitudeRadians) * cos(obliquityRadians) +
+        cos(eclipticLatitudeRadians) * sin(obliquityRadians) * sin(eclipticLongitudeRadians);
 
-    var declinationRadians = Math.asin(sinDeclination);
+    var declinationRadians = asin(sinDeclination);
     var declinationDegrees = radiansToDegrees(declinationRadians);
 
-    var y = Math.sin(eclipticLongitudeRadians) * Math.cos(obliquityRadians) - Math.tan(eclipticLatitudeRadians) * Math.sin(obliquityRadians);
-    var x = Math.cos(eclipticLongitudeRadians);
+    var y = sin(eclipticLongitudeRadians) * cos(obliquityRadians) - tan(eclipticLatitudeRadians) * sin(obliquityRadians);
+    var x = cos(eclipticLongitudeRadians);
 
-    var rightAscensionRadians = Math.atan2(y, x);
+    var rightAscensionRadians = atan2(y, x);
 
     var rightAscensionDegrees = radiansToDegrees(rightAscensionRadians);
-    rightAscensionDegrees = rightAscensionDegrees - (360 * Math.floor(rightAscensionDegrees / 360));
+    rightAscensionDegrees = rightAscensionDegrees - (360 * floor(rightAscensionDegrees / 360));
 
     var rightAscensionDecimalHours = this.decimalDegreesToDecimalHours(rightAscensionDegrees);
 
@@ -594,19 +597,19 @@ Astronomy.rightAscensionEquatorialToEclipticCoordinates = function(rightAscensio
     var obliquityRadians = degreesToRadians(obliquityDegrees);
 
     var sinEclipticLatitude =
-        Math.sin(declinationRadians) * Math.cos(obliquityRadians) -
-        Math.cos(declinationRadians) * Math.sin(obliquityRadians) * Math.sin(rightAscensionRadians);
+        sin(declinationRadians) * cos(obliquityRadians) -
+        cos(declinationRadians) * sin(obliquityRadians) * sin(rightAscensionRadians);
 
-    var eclipticLatitudeRadians = Math.asin(sinEclipticLatitude);
+    var eclipticLatitudeRadians = asin(sinEclipticLatitude);
     var eclipticLatitudeDegrees = radiansToDegrees(eclipticLatitudeRadians);
 
-    var y = Math.sin(rightAscensionRadians) * Math.cos(obliquityRadians) + Math.tan(declinationRadians) * Math.sin(obliquityRadians);
-    var x = Math.cos(rightAscensionRadians);
+    var y = sin(rightAscensionRadians) * cos(obliquityRadians) + tan(declinationRadians) * sin(obliquityRadians);
+    var x = cos(rightAscensionRadians);
 
-    var eclipticLongitudeRadians = Math.atan2(y, x);
+    var eclipticLongitudeRadians = atan2(y, x);
 
     var eclipticLongitudeDegrees = radiansToDegrees(eclipticLongitudeRadians);
-    eclipticLongitudeDegrees = eclipticLongitudeDegrees - (360 * Math.floor(eclipticLongitudeDegrees / 360));
+    eclipticLongitudeDegrees = eclipticLongitudeDegrees - (360 * floor(eclipticLongitudeDegrees / 360));
 
     return new EclipticCoordinates(
         this.decimalDegreesToDegreesMinutesSeconds(eclipticLongitudeDegrees),
@@ -627,17 +630,17 @@ Astronomy.rightAscensionEquatorialToGalacticCoordinates = function(rightAscensio
     var declinationRadians = degreesToRadians(declinationDegrees);
 
     var sinGalacticLatitude =
-        Math.cos(declinationRadians) * Math.cos(degreesToRadians(27.4)) * Math.cos(rightAscensionRadians - degreesToRadians(192.25)) +
-        Math.sin(declinationRadians) * Math.sin(degreesToRadians(27.4));
+        cos(declinationRadians) * cos(degreesToRadians(27.4)) * cos(rightAscensionRadians - degreesToRadians(192.25)) +
+        sin(declinationRadians) * sin(degreesToRadians(27.4));
 
-    var galacticLatitudeRadians = Math.asin(sinGalacticLatitude);
+    var galacticLatitudeRadians = asin(sinGalacticLatitude);
     var galacticLatitudeDegrees = radiansToDegrees(galacticLatitudeRadians);
 
-    var y = Math.sin(declinationRadians) - sinGalacticLatitude * Math.sin(degreesToRadians(27.4));
-    var x = Math.cos(declinationRadians) * Math.sin(rightAscensionRadians - degreesToRadians(192.25)) * Math.cos(degreesToRadians(27.4));
+    var y = sin(declinationRadians) - sinGalacticLatitude * sin(degreesToRadians(27.4));
+    var x = cos(declinationRadians) * sin(rightAscensionRadians - degreesToRadians(192.25)) * cos(degreesToRadians(27.4));
 
-    var galacticLongitudeDegrees = radiansToDegrees(Math.atan2(y, x)) + 33;
-    galacticLongitudeDegrees = galacticLongitudeDegrees - (360 * Math.floor(galacticLongitudeDegrees / 360));
+    var galacticLongitudeDegrees = radiansToDegrees(atan2(y, x)) + 33;
+    galacticLongitudeDegrees = galacticLongitudeDegrees - (360 * floor(galacticLongitudeDegrees / 360));
 
     return new GalacticCoordinates(
         this.decimalDegreesToDegreesMinutesSeconds(galacticLongitudeDegrees),
@@ -658,18 +661,18 @@ Astronomy.galacticToRightAscensionEquatorialCoordinates = function(galacticCoord
     var galacticLatitudeRadians = degreesToRadians(galacticLatitudeDegrees);
 
     var sinDeclination =
-        Math.cos(galacticLatitudeRadians) * Math.cos(degreesToRadians(27.4)) * Math.sin(galacticLongitudeRadians - degreesToRadians(33)) +
-        Math.sin(galacticLatitudeRadians) * Math.sin(degreesToRadians(27.4));
+        cos(galacticLatitudeRadians) * cos(degreesToRadians(27.4)) * sin(galacticLongitudeRadians - degreesToRadians(33)) +
+        sin(galacticLatitudeRadians) * sin(degreesToRadians(27.4));
 
-    var declinationRadians = Math.asin(sinDeclination);
+    var declinationRadians = asin(sinDeclination);
     var declinationDegrees = radiansToDegrees(declinationRadians);
 
-    var y = Math.cos(galacticLatitudeRadians) * Math.cos(galacticLongitudeRadians - degreesToRadians(33));
-    var x = Math.sin(galacticLatitudeRadians) * Math.cos(degreesToRadians(27.4)) -
-            Math.cos(galacticLatitudeRadians) * Math.sin(degreesToRadians(27.4)) * Math.sin(galacticLongitudeRadians - degreesToRadians(33));
+    var y = cos(galacticLatitudeRadians) * cos(galacticLongitudeRadians - degreesToRadians(33));
+    var x = sin(galacticLatitudeRadians) * cos(degreesToRadians(27.4)) -
+            cos(galacticLatitudeRadians) * sin(degreesToRadians(27.4)) * sin(galacticLongitudeRadians - degreesToRadians(33));
 
-    var rightAscensionDegrees = radiansToDegrees(Math.atan2(y, x)) + 192.25;
-    rightAscensionDegrees = rightAscensionDegrees - (360 * Math.floor(rightAscensionDegrees / 360));
+    var rightAscensionDegrees = radiansToDegrees(atan2(y, x)) + 192.25;
+    rightAscensionDegrees = rightAscensionDegrees - (360 * floor(rightAscensionDegrees / 360));
 
     var rightAscensionDecimalHours = this.decimalDegreesToDecimalHours(rightAscensionDegrees);
 
@@ -827,10 +830,10 @@ Astronomy.angleBetweenRightAscensionEquatorialCoordinates = function(rightAscens
     var declinationRadians2 = degreesToRadians(declinationDegrees2);
 
     var cosAngle =
-       Math.sin(declinationRadians1) * Math.sin(declinationRadians2) +
-       Math.cos(declinationRadians1) * Math.cos(declinationRadians2) * Math.cos(rightAscensionRadians1 - rightAscensionRadians2);
+       sin(declinationRadians1) * sin(declinationRadians2) +
+       cos(declinationRadians1) * cos(declinationRadians2) * cos(rightAscensionRadians1 - rightAscensionRadians2);
 
-    var angleRadians = Math.acos(cosAngle);
+    var angleRadians = acos(cosAngle);
     var angleDegrees = radiansToDegrees(angleRadians);
 
     return this.decimalDegreesToDegreesMinutesSeconds(angleDegrees);
@@ -851,10 +854,10 @@ Astronomy.angleBetweenEclipticCoordinates = function(eclipticCoordinates1, eclip
     var eclipticLatitudeRadians2 = degreesToRadians(eclipticLatitudeDegrees2);
 
     var cosAngle =
-        Math.sin(eclipticLatitudeRadians1) * Math.sin(eclipticLatitudeRadians2) +
-        Math.cos(eclipticLatitudeRadians1) * Math.cos(eclipticLatitudeRadians2) * Math.cos(eclipticLongitudeRadians1 - eclipticLongitudeRadians2);
+        sin(eclipticLatitudeRadians1) * sin(eclipticLatitudeRadians2) +
+        cos(eclipticLatitudeRadians1) * cos(eclipticLatitudeRadians2) * cos(eclipticLongitudeRadians1 - eclipticLongitudeRadians2);
 
-    var angleRadians = Math.acos(cosAngle);
+    var angleRadians = acos(cosAngle);
     var angleDegrees = radiansToDegrees(angleRadians);
 
     return this.decimalDegreesToDegreesMinutesSeconds(angleDegrees);
@@ -880,14 +883,14 @@ Astronomy.risingLocalSiderealTimeHours = function(rightAscensionEquatorialCoordi
 
     if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
 
-        aRadians = Math.acos(
-            -((Math.sin(verticalShiftRadians) + (Math.sin(latitudeRadians) * Math.sin(decRadians))) / (Math.cos(latitudeRadians) * Math.cos(decRadians)))
+        aRadians = acos(
+            -((sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians)))
         );
     }
 
     var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians - aRadians))
 
-    var settingLocalSiderealTimeHours = i - (24 * Math.floor(i / 24));
+    var settingLocalSiderealTimeHours = i - (24 * floor(i / 24));
 
     return settingLocalSiderealTimeHours;
 }
@@ -908,14 +911,14 @@ Astronomy.settingLocalSiderealTimeHours = function(rightAscensionEquatorialCoord
 
     if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
 
-        aRadians = Math.acos(
-            -((Math.sin(verticalShiftRadians) + (Math.sin(latitudeRadians) * Math.sin(decRadians))) / (Math.cos(latitudeRadians) * Math.cos(decRadians)))
+        aRadians = acos(
+            -((sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians)))
         );
     }
 
     var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians + aRadians))
 
-    var settingLocalSiderealTimeHours = i - (24 * Math.floor(i / 24));
+    var settingLocalSiderealTimeHours = i - (24 * floor(i / 24));
 
     return settingLocalSiderealTimeHours;
 }
@@ -955,13 +958,13 @@ Astronomy.risingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, v
     if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
 
         aDegrees = radiansToDegrees(
-            Math.acos(
-                (Math.sin(decRadians) + (Math.sin(verticalShiftRadians) * Math.sin(latitudeRadians))) / (Math.cos(verticalShiftRadians) * Math.cos(latitudeRadians))
+            acos(
+                (sin(decRadians) + (sin(verticalShiftRadians) * sin(latitudeRadians))) / (cos(verticalShiftRadians) * cos(latitudeRadians))
             )
         );
     }
 
-    var risingAzimuthDegrees = aDegrees - (360 * Math.floor(aDegrees / 360));
+    var risingAzimuthDegrees = aDegrees - (360 * floor(aDegrees / 360));
 
     return risingAzimuthDegrees;
 }
@@ -979,26 +982,26 @@ Astronomy.settingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, 
     if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
 
         aDegrees = radiansToDegrees(
-            Math.acos(
-                (Math.sin(decRadians) + (Math.sin(verticalShiftRadians) * Math.sin(latitudeRadians))) / (Math.cos(verticalShiftRadians) * Math.cos(latitudeRadians))
+            acos(
+                (sin(decRadians) + (sin(verticalShiftRadians) * sin(latitudeRadians))) / (cos(verticalShiftRadians) * cos(latitudeRadians))
             )
         );
     }
 
-    var settingAzimuthDegrees = (360 - aDegrees) - (360 * Math.floor((360 - aDegrees) / 360));
+    var settingAzimuthDegrees = (360 - aDegrees) - (360 * floor((360 - aDegrees) / 360));
 
     return settingAzimuthDegrees;
 }
 
 Astronomy.risingSettingStatus = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
 
-    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination); // C
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
     var decRadians = degreesToRadians(decDecimalDegrees);
 
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var risingSettingStatus = -(Math.sin(verticalShiftRadians) + (Math.sin(latitudeRadians) * Math.sin(decRadians))) / (Math.cos(latitudeRadians) * Math.cos(decRadians));
+    var risingSettingStatus = -(sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians));
 
     if (risingSettingStatus >= 1) { // TODO - enum
         return "never rises"
@@ -1022,53 +1025,53 @@ Astronomy.nutation = function(calendarDate) {
     var tCenturiesSq = tCenturies * tCenturies;
 
     var A = 100.0021358 * tCenturies;
-    var B = 360 * (A - Math.floor(A));
+    var B = 360 * (A - floor(A));
     var lDegrees = 279.6967 + (0.000303 * tCenturiesSq) + B;
     var lRadians2 = 2 * degreesToRadians(lDegrees);
 
     var C = 1336.855231 * tCenturies;
-    var D = 360 * (C - Math.floor(C));
+    var D = 360 * (C - floor(C));
     var dDegrees = 270.4342 - (0.001133 * tCenturiesSq) + D;
     var dRadians2 = 2 * degreesToRadians(dDegrees);
 
     var E = 99.99736056 * tCenturies;
-    var F = 360 * (E - Math.floor(E));
+    var F = 360 * (E - floor(E));
     var m1Degrees = 358.4758 - (0.00015 * tCenturiesSq) + F;
     var m1Radians = degreesToRadians(m1Degrees);
 
     var G = 1325.552359 * tCenturies;
-    var H = 360 * (G - Math.floor(G));
+    var H = 360 * (G - floor(G));
     var m2Degrees = 296.1046 + (0.009192 * tCenturiesSq) + H;
     var m2Radians = degreesToRadians(m2Degrees);
 
     var I = 5.372616667 * tCenturies;
-    var J = 360 * (I - Math.floor(I));
+    var J = 360 * (I - floor(I));
     var nDegrees = 259.1833 + 0.002078 * tCenturiesSq - J;
     var nRadians = degreesToRadians(nDegrees);
 
-    var nutationInLongitudeArcSecs = (-17.2327 - 0.01737 * tCenturies) * Math.sin(nRadians);
-    nutationInLongitudeArcSecs += (-1.2729 - 0.00013 * tCenturies) * Math.sin(lRadians2);
-    nutationInLongitudeArcSecs += 0.2088 * Math.sin(2 * nRadians);
-    nutationInLongitudeArcSecs -= 0.2037 * Math.sin(dRadians2);
-    nutationInLongitudeArcSecs += (0.1261 - 0.00031 * tCenturies) * Math.sin(m1Radians);
-    nutationInLongitudeArcSecs += 0.0675 * Math.sin(m2Radians)
-    nutationInLongitudeArcSecs -= (0.0497 - 0.00012 * tCenturies) * Math.sin(lRadians2 + m1Radians);
-    nutationInLongitudeArcSecs -= 0.0342 * Math.sin(dRadians2 - nRadians);
-    nutationInLongitudeArcSecs -= 0.0261 * Math.sin(dRadians2 + m2Radians);
-    nutationInLongitudeArcSecs += 0.0214 * Math.sin(lRadians2 - m1Radians);
-    nutationInLongitudeArcSecs -= 0.0149 * Math.sin(lRadians2 - dRadians2 + m2Radians);
-    nutationInLongitudeArcSecs += 0.0124 * Math.sin(lRadians2 - nRadians)
-    nutationInLongitudeArcSecs += 0.0114 * Math.sin(dRadians2 - m2Radians);
+    var nutationInLongitudeArcSecs = (-17.2327 - 0.01737 * tCenturies) * sin(nRadians);
+    nutationInLongitudeArcSecs += (-1.2729 - 0.00013 * tCenturies) * sin(lRadians2);
+    nutationInLongitudeArcSecs += 0.2088 * sin(2 * nRadians);
+    nutationInLongitudeArcSecs -= 0.2037 * sin(dRadians2);
+    nutationInLongitudeArcSecs += (0.1261 - 0.00031 * tCenturies) * sin(m1Radians);
+    nutationInLongitudeArcSecs += 0.0675 * sin(m2Radians)
+    nutationInLongitudeArcSecs -= (0.0497 - 0.00012 * tCenturies) * sin(lRadians2 + m1Radians);
+    nutationInLongitudeArcSecs -= 0.0342 * sin(dRadians2 - nRadians);
+    nutationInLongitudeArcSecs -= 0.0261 * sin(dRadians2 + m2Radians);
+    nutationInLongitudeArcSecs += 0.0214 * sin(lRadians2 - m1Radians);
+    nutationInLongitudeArcSecs -= 0.0149 * sin(lRadians2 - dRadians2 + m2Radians);
+    nutationInLongitudeArcSecs += 0.0124 * sin(lRadians2 - nRadians)
+    nutationInLongitudeArcSecs += 0.0114 * sin(dRadians2 - m2Radians);
 
-    var nutationInObliquityArcSecs = (9.21 + (0.00091 * tCenturies)) * Math.cos(nRadians);
-    nutationInObliquityArcSecs += (0.5522 - (0.00029 * tCenturies)) * Math.cos(lRadians2);
-    nutationInObliquityArcSecs -= 0.0904 * Math.cos(nRadians * 2);
-    nutationInObliquityArcSecs += 0.0884 * Math.cos(dRadians2);
-    nutationInObliquityArcSecs += 0.0216 * Math.cos(lRadians2 + m1Radians);
-    nutationInObliquityArcSecs += 0.0183 * Math.cos(dRadians2 - nRadians);
-    nutationInObliquityArcSecs += 0.0113 * Math.cos(dRadians2 + m2Radians);
-    nutationInObliquityArcSecs -= 0.0093 * Math.cos(lRadians2 - m1Radians);
-    nutationInObliquityArcSecs -= 0.0066 * Math.cos(lRadians2 - nRadians);
+    var nutationInObliquityArcSecs = (9.21 + (0.00091 * tCenturies)) * cos(nRadians);
+    nutationInObliquityArcSecs += (0.5522 - (0.00029 * tCenturies)) * cos(lRadians2);
+    nutationInObliquityArcSecs -= 0.0904 * cos(nRadians * 2);
+    nutationInObliquityArcSecs += 0.0884 * cos(dRadians2);
+    nutationInObliquityArcSecs += 0.0216 * cos(lRadians2 + m1Radians);
+    nutationInObliquityArcSecs += 0.0183 * cos(dRadians2 - nRadians);
+    nutationInObliquityArcSecs += 0.0113 * cos(dRadians2 + m2Radians);
+    nutationInObliquityArcSecs -= 0.0093 * cos(lRadians2 - m1Radians);
+    nutationInObliquityArcSecs -= 0.0066 * cos(lRadians2 - nRadians);
 
     var nutationInLongitudeDegrees = nutationInLongitudeArcSecs / 3600;
     var nutationInObliquityDegrees = nutationInObliquityArcSecs / 3600;
@@ -1099,8 +1102,8 @@ TimeOfDay.prototype.toString = function() {
 
     var hours = zeroPad(this.hours, 2);
     var minutes = zeroPad(this.minutes, 2);
-    var seconds = zeroPad(Math.floor(this.seconds), 2);
-    var milliseconds = zeroPad(Math.round((this.seconds % 1) * 1000), 3);
+    var seconds = zeroPad(floor(this.seconds), 2);
+    var milliseconds = zeroPad(round((this.seconds % 1) * 1000), 3);
 
     return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
@@ -1125,8 +1128,8 @@ function DegreesMinutesSeconds(degrees, minutes, seconds) {
 
 DegreesMinutesSeconds.prototype.toString = function() {
 
-    var seconds = Math.floor(this.seconds);
-    var milliseconds = zeroPad(Math.round((this.seconds % 1) * 1000), 3);
+    var seconds = floor(this.seconds);
+    var milliseconds = zeroPad(round((this.seconds % 1) * 1000), 3);
 
     return this.degrees + "° " + this.minutes + "' " + seconds + "." + milliseconds + "\"";
 }
@@ -1225,7 +1228,7 @@ function isLeapYear(year) {
 
 function reduceValueToZeroToRange(value, range) {
 
-    return value - (range * Math.floor(value / range));
+    return value - (range * floor(value / range));
 }
 
 function dateInGregorianCalendar(calendarDate) {
@@ -1249,10 +1252,10 @@ function zeroPad(number, size) {
 
 function degreesToRadians(degrees) {
 
-    return degrees * (Math.PI / 180);
+    return degrees * (pi / 180);
 }
 
 function radiansToDegrees(radians) {
 
-    return radians / (Math.PI / 180);
+    return radians / (pi / 180);
 }
