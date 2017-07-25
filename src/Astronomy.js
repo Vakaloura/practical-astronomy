@@ -13,6 +13,12 @@ var pi    = Math.PI,
     round = Math.round,
     abs   = Math.abs;
 
+var RisesSetsStatus = {
+    RISES_SETS: "rises & sets",
+    CIRCUMPOLAR: "circumpolar",
+    INVISIBLE: "invisible",
+};
+
 var Astronomy = {};
 
 /*
@@ -883,7 +889,7 @@ Astronomy.risingLocalSiderealTimeHours = function(rightAscensionEquatorialCoordi
 
     var aRadians = 0;
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
 
         aRadians = acos(
             -((sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians)))
@@ -911,7 +917,7 @@ Astronomy.settingLocalSiderealTimeHours = function(rightAscensionEquatorialCoord
 
     var aRadians = 0;
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
 
         aRadians = acos(
             -((sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians)))
@@ -957,7 +963,7 @@ Astronomy.risingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, v
 
     var aDegrees = 0; // TODO - test this case
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
 
         aDegrees = radiansToDegrees(
             acos(
@@ -981,7 +987,7 @@ Astronomy.settingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, 
 
     var aDegrees = 0; // TODO - test this case
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === "OK") {
+    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
 
         aDegrees = radiansToDegrees(
             acos(
@@ -1005,12 +1011,12 @@ Astronomy.risingSettingStatus = function(rightAscensionEquatorialCoordinates, ve
 
     var risingSettingStatus = -(sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians));
 
-    if (risingSettingStatus >= 1) { // TODO - enum
-        return "never rises"
+    if (risingSettingStatus >= 1) {
+        return RisesSetsStatus.INVISIBLE
     } else if (risingSettingStatus <= -1) {
-        return "circumpolar";
+        return RisesSetsStatus.CIRCUMPOLAR;
     } else {
-        return "OK";
+        return RisesSetsStatus.RISES_SETS;
     }
 }
 
