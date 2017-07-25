@@ -54,7 +54,7 @@
                     function() {
                         Astronomy.daysInMonth(1582, 10);
                     },
-                    new AstronomyError("month must be in Gregorian Calendar, i.e. >= 1582/11")
+                    "month must be in Gregorian Calendar, i.e. >= 1582/11"
                 );
             });
 
@@ -86,7 +86,7 @@
                     function() {
                         Astronomy.dateOfEaster(1582);
                     },
-                    new AstronomyError("year must be in Gregorian Calendar, i.e. >= 1583")
+                    "year must be in Gregorian Calendar, i.e. >= 1583"
                 );
             });
 
@@ -108,7 +108,7 @@
                     function() {
                         Astronomy.dateToDayNumber(new CalendarDate(1582, 10, 14));
                     },
-                    new AstronomyError("date must be in Gregorian Calendar, i.e. >= 1582/10/15")
+                    "date must be in Gregorian Calendar, i.e. >= 1582/10/15"
                 );
             });
 
@@ -127,7 +127,7 @@
                     function() {
                         Astronomy.dateToDaysElapsedSinceEpoch(new CalendarDate(1582, 10, 14));
                     },
-                    new AstronomyError("date must be in Gregorian Calendar, i.e. >= 1582/10/15")
+                    "date must be in Gregorian Calendar, i.e. >= 1582/10/15"
                 );
             });
 
@@ -162,7 +162,7 @@
                     function() {
                         Astronomy.julianDayNumberToDate(2299160.49);
                     },
-                    new AstronomyError("julian day number must be in Gregorian Calendar, i.e. >= 2299160.5")
+                    "julian day number must be in Gregorian Calendar, i.e. >= 2299160.5"
                 );
             });
 
@@ -185,7 +185,7 @@
                     function() {
                         Astronomy.dateToDayOfWeek(new CalendarDate(1582, 10, 14));
                     },
-                    new AstronomyError("date must be in Gregorian Calendar, i.e. >= 1582/10/15")
+                    "date must be in Gregorian Calendar, i.e. >= 1582/10/15"
                 );
             });
 

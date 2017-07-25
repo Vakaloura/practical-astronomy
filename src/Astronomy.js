@@ -1,13 +1,6 @@
 /* Copyright 2017 Wayne D Grant (www.waynedgrant.com)
    Licensed under the MIT License */
 
-function AstronomyError(message) {
-    this.name = "AstronomyError";
-    this.message = (message || "");
-}
-
-AstronomyError.prototype = Error.prototype;
-
 // Shortcuts to Math functions
 var pi = Math.PI, sin = Math.sin, cos = Math.cos, tan = Math.tan, asin = Math.asin, atan2 = Math.atan2, acos = Math.acos, floor = Math.floor, round = Math.round, abs = Math.abs;
 
@@ -148,7 +141,7 @@ Astronomy.dateToModifiedJulianDayNumber = function(calendarDate) {
 Astronomy.julianDayNumberToDate = function(julianDayNumber) {
 
     if (julianDayNumber < 2299160.5) {
-        throw new AstronomyError("julian day number must be in Gregorian Calendar, i.e. >= 2299160.5");
+        throw "julian day number must be in Gregorian Calendar, i.e. >= 2299160.5";
     }
 
     var i = floor(julianDayNumber + 0.5);
@@ -1203,21 +1196,21 @@ Nutation.prototype.toString = function() {
 function checkYearInGregorianCalendar(year) {
 
     if (year < 1583) {
-        throw new AstronomyError("year must be in Gregorian Calendar, i.e. >= 1583");
+        throw "year must be in Gregorian Calendar, i.e. >= 1583";
     }
 }
 
 function checkMonthInGregorianCalendar(year, month) {
 
     if (year < 1583 || (year == 1582 && month < 11)) {
-        throw new AstronomyError("month must be in Gregorian Calendar, i.e. >= 1582/11");
+        throw "month must be in Gregorian Calendar, i.e. >= 1582/11";
     }
 }
 
 function checkDateInGregorianCalendar(calendarDate) {
 
     if (!dateInGregorianCalendar(calendarDate)) {
-        throw new AstronomyError("date must be in Gregorian Calendar, i.e. >= 1582/10/15");
+        throw "date must be in Gregorian Calendar, i.e. >= 1582/10/15";
     }
 }
 
