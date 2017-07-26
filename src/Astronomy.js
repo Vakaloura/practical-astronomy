@@ -13,11 +13,18 @@ var pi    = Math.PI,
     round = Math.round,
     abs   = Math.abs;
 
-var RisesSetsStatus = {
-    RISES_SETS: "rises & sets",
+var RisesSets = {
+    RISES_SETS: "rises/sets",
     CIRCUMPOLAR: "circumpolar",
-    INVISIBLE: "invisible",
+    INVISIBLE: "invisible"
 };
+
+function AstronomyError(message) {
+    this.name = "AstronomyError";
+    this.message = (message || "");
+}
+
+AstronomyError.prototype = Error.prototype;
 
 var Astronomy = {};
 
@@ -156,7 +163,7 @@ Astronomy.dateToModifiedJulianDayNumber = function(calendarDate) {
 Astronomy.julianDayNumberToDate = function(julianDayNumber) {
 
     if (julianDayNumber < 2299160.5) {
-        throw "julian day number must be in Gregorian Calendar, i.e. >= 2299160.5";
+        throw new AstronomyError("Julian day number must be in Gregorian Calendar, i.e. >= 2299160.5");
     }
 
     var i = floor(julianDayNumber + 0.5);
@@ -875,6 +882,25 @@ Astronomy.angleBetweenEclipticCoordinates = function(eclipticCoordinates1, eclip
  * 33 - Rising and setting
  */
 
+Astronomy.risesSets = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var verticalShiftRadians = degreesToRadians(verticalShift);
+    var latitudeRadians = degreesToRadians(latitude);
+
+    var risesSets = -(sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians));
+
+    if (risesSets >= 1) {
+        return RisesSets.INVISIBLE
+    } else if (risesSets <= -1) {
+        return RisesSets.CIRCUMPOLAR;
+    } else {
+        return RisesSets.RISES_SETS;
+    }
+}
+
 Astronomy.risingLocalSiderealTimeHours = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
 
     var raDecimalHours = this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension);
@@ -887,13 +913,14 @@ Astronomy.risingLocalSiderealTimeHours = function(rightAscensionEquatorialCoordi
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var aRadians = 0;
+    var risesSets = this.risesSets(rightAscensionEquatorialCoordinates, verticalShift, latitude);
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
-
-        aRadians = acos(
+    if (risesSets === RisesSets.RISES_SETS) {
+        var aRadians = acos(
             -((sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians)))
         );
+    } else {
+        throw new AstronomyError("Fixed celestial object does not rise as it is " + risesSets);
     }
 
     var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians - aRadians))
@@ -915,13 +942,14 @@ Astronomy.settingLocalSiderealTimeHours = function(rightAscensionEquatorialCoord
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var aRadians = 0;
+    var risesSets = this.risesSets(rightAscensionEquatorialCoordinates, verticalShift, latitude);
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
-
-        aRadians = acos(
+    if (risesSets === RisesSets.RISES_SETS) {
+        var aRadians = acos(
             -((sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians)))
         );
+    } else {
+         throw new AstronomyError("Fixed celestial object does not set as it is " + risesSets);
     }
 
     var i = this.decimalDegreesToDecimalHours(radiansToDegrees(raRadians + aRadians))
@@ -961,15 +989,16 @@ Astronomy.risingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, v
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var aDegrees = 0; // TODO - test this case
+    var risesSets = this.risesSets(rightAscensionEquatorialCoordinates, verticalShift, latitude);
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
-
-        aDegrees = radiansToDegrees(
+    if (risesSets === RisesSets.RISES_SETS) {
+        var aDegrees = radiansToDegrees(
             acos(
                 (sin(decRadians) + (sin(verticalShiftRadians) * sin(latitudeRadians))) / (cos(verticalShiftRadians) * cos(latitudeRadians))
             )
         );
+    } else {
+        throw new AstronomyError("Fixed celestial object does not rise as it is " + risesSets);
     }
 
     var risingAzimuthDegrees = aDegrees - (360 * floor(aDegrees / 360));
@@ -985,39 +1014,21 @@ Astronomy.settingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, 
     var verticalShiftRadians = degreesToRadians(verticalShift);
     var latitudeRadians = degreesToRadians(latitude);
 
-    var aDegrees = 0; // TODO - test this case
+    var risesSets = this.risesSets(rightAscensionEquatorialCoordinates, verticalShift, latitude);
 
-    if (this.risingSettingStatus(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSetsStatus.RISES_SETS) {
-
-        aDegrees = radiansToDegrees(
+    if (this.risesSets(rightAscensionEquatorialCoordinates, verticalShift, latitude) === RisesSets.RISES_SETS) {
+        var aDegrees = radiansToDegrees(
             acos(
                 (sin(decRadians) + (sin(verticalShiftRadians) * sin(latitudeRadians))) / (cos(verticalShiftRadians) * cos(latitudeRadians))
             )
         );
+    } else {
+        throw new AstronomyError("Fixed celestial object does not set as it is " + risesSets);
     }
 
     var settingAzimuthDegrees = (360 - aDegrees) - (360 * floor((360 - aDegrees) / 360));
 
     return settingAzimuthDegrees;
-}
-
-Astronomy.risingSettingStatus = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
-
-    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
-    var decRadians = degreesToRadians(decDecimalDegrees);
-
-    var verticalShiftRadians = degreesToRadians(verticalShift);
-    var latitudeRadians = degreesToRadians(latitude);
-
-    var risingSettingStatus = -(sin(verticalShiftRadians) + (sin(latitudeRadians) * sin(decRadians))) / (cos(latitudeRadians) * cos(decRadians));
-
-    if (risingSettingStatus >= 1) {
-        return RisesSetsStatus.INVISIBLE
-    } else if (risingSettingStatus <= -1) {
-        return RisesSetsStatus.CIRCUMPOLAR;
-    } else {
-        return RisesSetsStatus.RISES_SETS;
-    }
 }
 
 /*
@@ -1211,21 +1222,21 @@ Nutation.prototype.toString = function() {
 function checkYearInGregorianCalendar(year) {
 
     if (year < 1583) {
-        throw "year must be in Gregorian Calendar, i.e. >= 1583";
+        throw new AstronomyError("Year must be in Gregorian Calendar, i.e. >= 1583");
     }
 }
 
 function checkMonthInGregorianCalendar(year, month) {
 
     if (year < 1583 || (year == 1582 && month < 11)) {
-        throw "month must be in Gregorian Calendar, i.e. >= 1582/11";
+        throw new AstronomyError("Month must be in Gregorian Calendar, i.e. >= 1582/11");
     }
 }
 
 function checkDateInGregorianCalendar(calendarDate) {
 
     if (!dateInGregorianCalendar(calendarDate)) {
-        throw "date must be in Gregorian Calendar, i.e. >= 1582/10/15";
+        throw new AstronomyError("Date must be in Gregorian Calendar, i.e. >= 1582/10/15");
     }
 }
 

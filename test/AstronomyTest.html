@@ -54,7 +54,7 @@
                     function() {
                         Astronomy.daysInMonth(1582, 10);
                     },
-                    "month must be in Gregorian Calendar, i.e. >= 1582/11"
+                    new AstronomyError("Month must be in Gregorian Calendar, i.e. >= 1582/11")
                 );
             });
 
@@ -86,7 +86,7 @@
                     function() {
                         Astronomy.dateOfEaster(1582);
                     },
-                    "year must be in Gregorian Calendar, i.e. >= 1583"
+                    new AstronomyError("Year must be in Gregorian Calendar, i.e. >= 1583")
                 );
             });
 
@@ -108,7 +108,7 @@
                     function() {
                         Astronomy.dateToDayNumber(new CalendarDate(1582, 10, 14));
                     },
-                    "date must be in Gregorian Calendar, i.e. >= 1582/10/15"
+                    new AstronomyError("Date must be in Gregorian Calendar, i.e. >= 1582/10/15")
                 );
             });
 
@@ -127,7 +127,7 @@
                     function() {
                         Astronomy.dateToDaysElapsedSinceEpoch(new CalendarDate(1582, 10, 14));
                     },
-                    "date must be in Gregorian Calendar, i.e. >= 1582/10/15"
+                    new AstronomyError("Date must be in Gregorian Calendar, i.e. >= 1582/10/15")
                 );
             });
 
@@ -162,7 +162,7 @@
                     function() {
                         Astronomy.julianDayNumberToDate(2299160.49);
                     },
-                    "julian day number must be in Gregorian Calendar, i.e. >= 2299160.5"
+                    new AstronomyError("Julian day number must be in Gregorian Calendar, i.e. >= 2299160.5")
                 );
             });
 
@@ -185,7 +185,7 @@
                     function() {
                         Astronomy.dateToDayOfWeek(new CalendarDate(1582, 10, 14));
                     },
-                    "date must be in Gregorian Calendar, i.e. >= 1582/10/15"
+                    new AstronomyError("Date must be in Gregorian Calendar, i.e. >= 1582/10/15")
                 );
             });
 
@@ -1029,10 +1029,10 @@
 
             QUnit.module("33 - Rising and setting")
 
-            QUnit.test("Rising setting status: OK", function(assert) {
+            QUnit.test("Rises sets? rises/sets", function(assert) {
 
                 assert.equal(
-                    Astronomy.risingSettingStatus(
+                    Astronomy.risesSets(
                         new RightAscensionEquatorialCoordinates(
                             new TimeOfDay(23, 39, 20), // right ascension
                             new DegreesMinutesSeconds(21, 42, 0) // declination
@@ -1040,14 +1040,14 @@
                         0.5667, // verticalShift
                         30 // latitude
                     ),
-                    RisesSetsStatus.RISES_SETS
+                    RisesSets.RISES_SETS
                 );
             });
 
-            QUnit.test("Rising setting status: never rises", function(assert) {
+            QUnit.test("Rises sets? invisible", function(assert) {
 
                 assert.equal(
-                    Astronomy.risingSettingStatus(
+                    Astronomy.risesSets(
                         new RightAscensionEquatorialCoordinates(
                             new TimeOfDay(23, 39, 20), // right ascension
                             new DegreesMinutesSeconds(21, 42, 0) // declination
@@ -1055,14 +1055,14 @@
                         0.5667, // verticalShift
                         -70 // latitude
                     ),
-                    RisesSetsStatus.INVISIBLE
+                    RisesSets.INVISIBLE
                 );
             });
 
-            QUnit.test("Rising setting status: circumpolar", function(assert) {
+            QUnit.test("Rising sets? circumpolar", function(assert) {
 
                 assert.equal(
-                    Astronomy.risingSettingStatus(
+                    Astronomy.risesSets(
                         new RightAscensionEquatorialCoordinates(
                             new TimeOfDay(23, 39, 20), // right ascension
                             new DegreesMinutesSeconds(21, 42, 0) // declination
@@ -1070,11 +1070,11 @@
                         39, // verticalShift
                         30 // latitude
                     ),
-                    RisesSetsStatus.CIRCUMPOLAR
+                    RisesSets.CIRCUMPOLAR
                 );
             });
 
-            QUnit.test("Rising local sidereal time in hours", function(assert) {
+            QUnit.test("Rising local sidereal time in hours: rises/sets", function(assert) {
 
                 assert.equal(
                     Astronomy.risingLocalSiderealTimeHours(
@@ -1089,7 +1089,41 @@
                 );
             });
 
-            QUnit.test("Setting local sidereal time in hours", function(assert) {
+            QUnit.test("Rising local sidereal time in hours: invisible", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.risingLocalSiderealTimeHours(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            0.5667, // verticalShift
+                            -70 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not rise as it is invisible")
+                );
+            });
+
+            QUnit.test("Rising local sidereal time in hours: circumpolar", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.risingLocalSiderealTimeHours(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            39, // verticalShift
+                            30 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not rise as it is circumpolar")
+                );
+            });
+
+            QUnit.test("Setting local sidereal time in hours: rises/sets", function(assert) {
 
                 assert.equal(
                     Astronomy.settingLocalSiderealTimeHours(
@@ -1104,7 +1138,41 @@
                 );
             });
 
-            QUnit.test("Rising universal time", function(assert) {
+            QUnit.test("Setting local sidereal time in hours: invisible", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.settingLocalSiderealTimeHours(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            0.5667, // verticalShift
+                            -70 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not set as it is invisible")
+                );
+            });
+
+            QUnit.test("Setting local sidereal time in hours: circumpolar", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.settingLocalSiderealTimeHours(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            39, // verticalShift
+                            30 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not set as it is circumpolar")
+                );
+            });
+
+            QUnit.test("Rising universal time: rises/sets", function(assert) {
 
                 assert.equal(
                     Astronomy.risingUniversalTime(
@@ -1121,7 +1189,45 @@
                 );
             });
 
-            QUnit.test("Setting universal time", function(assert) {
+            QUnit.test("Rising universal time: invisible", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.risingUniversalTime(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            0.5667, // verticalShift
+                            -70, // latitude
+                            64, // longitude
+                            new CalendarDate(2010, 8, 24)
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not rise as it is invisible")
+                );
+            });
+
+            QUnit.test("Rising universal time: circumpolar", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.risingUniversalTime(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            39, // verticalShift
+                            30, // latitude
+                            64, // longitude
+                            new CalendarDate(2010, 8, 24)
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not rise as it is circumpolar")
+                );
+            });
+
+            QUnit.test("Setting universal time: rises/sets", function(assert) {
 
                 assert.equal(
                     Astronomy.settingUniversalTime(
@@ -1138,7 +1244,45 @@
                 );
             });
 
-            QUnit.test("Rising azimuth degrees", function(assert) {
+            QUnit.test("Setting universal time: invisible", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.settingUniversalTime(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            0.5667, // verticalShift
+                            -70, // latitude
+                            64, // longitude
+                            new CalendarDate(2010, 8, 24)
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not set as it is invisible")
+                );
+            });
+
+            QUnit.test("Setting universal time: circumpolar", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.settingUniversalTime(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            39, // verticalShift
+                            30, // latitude
+                            64, // longitude
+                            new CalendarDate(2010, 8, 24)
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not set as it is circumpolar")
+                );
+            });
+
+            QUnit.test("Rising azimuth degrees: rises/sets", function(assert) {
 
                 assert.equal(
                     Astronomy.risingAzimuthDegrees(
@@ -1153,7 +1297,41 @@
                 );
             });
 
-            QUnit.test("Setting azimuth degrees", function(assert) {
+            QUnit.test("Rising azimuth degrees: invisible", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.risingAzimuthDegrees(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            0.5667, // verticalShift
+                            -70 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not rise as it is invisible")
+                );
+            });
+
+            QUnit.test("Rising azimuth degrees: circumpolar", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.risingAzimuthDegrees(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            39, // verticalShift
+                            30 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not rise as it is circumpolar")
+                );
+            });
+
+            QUnit.test("Setting azimuth degrees: rises/sets", function(assert) {
 
                 assert.equal(
                     Astronomy.settingAzimuthDegrees(
@@ -1165,6 +1343,40 @@
                         30 // latitude
                     ),
                     295.6376519614888
+                );
+            });
+
+            QUnit.test("Setting azimuth degrees: invisible", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.settingAzimuthDegrees(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            0.5667, // verticalShift
+                            -70 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not set as it is invisible")
+                );
+            });
+
+            QUnit.test("Setting azimuth degrees: circumpolar", function(assert) {
+
+                assert.throws(
+                    function() {
+                        Astronomy.settingAzimuthDegrees(
+                            new RightAscensionEquatorialCoordinates(
+                                new TimeOfDay(23, 39, 20), // right ascension
+                                new DegreesMinutesSeconds(21, 42, 0) // declination
+                            ),
+                            39, // verticalShift
+                            30 // latitude
+                        )
+                    },
+                    new AstronomyError("Fixed celestial object does not set as it is circumpolar")
                 );
             });
 
