@@ -967,7 +967,7 @@ Astronomy.risingUniversalTime = function(rightAscensionEquatorialCoordinates, ve
     var gst = this.localSiderealTimeToGreenwichSiderealTime(risingLocalSiderealTime, longitude);
     var ut = this.greenwichSiderealTimeToUniversalTime(new DateAndTime(calendarDate, gst));
 
-    return new TimeOfDay(ut.hours, ut.minutes, 0); // TODO - round properly
+    return new TimeOfDay(ut.hours, ut.minutes, ut.seconds);
 }
 
 Astronomy.settingUniversalTime = function(rightAscensionEquatorialCoordinates, verticalShift, latitude, longitude, calendarDate) {
@@ -978,7 +978,7 @@ Astronomy.settingUniversalTime = function(rightAscensionEquatorialCoordinates, v
     var gst = this.localSiderealTimeToGreenwichSiderealTime(settingLocalSiderealTime, longitude);
     var ut = this.greenwichSiderealTimeToUniversalTime(new DateAndTime(calendarDate, gst));
 
-    return new TimeOfDay(ut.hours, ut.minutes, 0); // TODO - round properly
+    return new TimeOfDay(ut.hours, ut.minutes, ut.seconds);
 }
 
 Astronomy.risingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, verticalShift, latitude) {
