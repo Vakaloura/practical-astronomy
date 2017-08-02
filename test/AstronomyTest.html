@@ -1380,6 +1380,44 @@
                 );
             });
 
+            QUnit.module("34 - Precession")
+
+            QUnit.test("Low precision precession from epoch j1950", function(assert) {
+
+                assert.equal(
+                    Astronomy.lowPrecisionPrecession(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(9, 10, 43), // right ascension
+                            new DegreesMinutesSeconds(14, 23, 25) // declination
+                        ),
+                        j1950_epoch, // epoch date for coordinates
+                        new CalendarDate(1979, 6, 1) // date to correct coordinates to
+                    ).toString(),
+                    new RightAscensionEquatorialCoordinates(
+                        new TimeOfDay(9, 12, 20.183), // right ascension
+                        new DegreesMinutesSeconds(14, 16, 9.124) // declination
+                    ).toString()
+                );
+            });
+
+            QUnit.test("Low precision precession from epoch j2000", function(assert) {
+
+                assert.equal(
+                    Astronomy.lowPrecisionPrecession(
+                        new RightAscensionEquatorialCoordinates(
+                            new TimeOfDay(9, 10, 43), // right ascension
+                            new DegreesMinutesSeconds(14, 23, 25) // declination
+                        ),
+                        j2000_epoch, // epoch date for coordinates
+                        new CalendarDate(2017, 6, 1) // date to correct coordinates to
+                    ).toString(),
+                    new RightAscensionEquatorialCoordinates(
+                        new TimeOfDay(9, 11, 40.553), // right ascension
+                        new DegreesMinutesSeconds(14, 19, 6.992) // declination
+                    ).toString()
+                );
+            });
+
             QUnit.module("35 - Nutation")
 
             QUnit.test("Nutation", function(assert) {

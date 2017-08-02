@@ -28,6 +28,9 @@ AstronomyError.prototype = Error.prototype;
 
 var Astronomy = {};
 
+var j1950_epoch = new CalendarDate(1950, 1, 0.923),
+    j2000_epoch = new CalendarDate(2000, 1, 1.5)
+
 /*
  * 01 - Calendars
  */
@@ -1029,6 +1032,37 @@ Astronomy.settingAzimuthDegrees = function(rightAscensionEquatorialCoordinates, 
     var settingAzimuthDegrees = (360 - aDegrees) - (360 * floor((360 - aDegrees) / 360));
 
     return settingAzimuthDegrees;
+}
+
+/*
+ * 34 - Precession
+ */
+
+Astronomy.lowPrecisionPrecession = function(rightAscensionEquatorialCoordinates, coordinatesEpochCalendarDate, correctionEpochCalenderDate) {
+
+    var raDecimalHours = this.hoursMinutesSecondsToDecimalHours(rightAscensionEquatorialCoordinates.rightAscension);
+    var raRadians = degreesToRadians(this.decimalHoursToDecimalDegrees(raDecimalHours));
+
+    var decDecimalDegrees = this.degreesMinutesSecondsToDecimalDegrees(rightAscensionEquatorialCoordinates.declination);
+    var decRadians = degreesToRadians(decDecimalDegrees);
+
+    var tCenturies = (this.dateToJulianDayNumber(coordinatesEpochCalendarDate) - 2415020) / 36525;
+
+    var coordinatesEpochMSecs = 3.07234 + (0.00186 * tCenturies);
+    var coordinatesEpochNArcSecs = 20.0468 - (0.0085 * tCenturies);
+
+    var dateDiffYears = (this.dateToJulianDayNumber(correctionEpochCalenderDate) - this.dateToJulianDayNumber(coordinatesEpochCalendarDate)) / 365.25;
+
+    var s1DecimalHours = ((coordinatesEpochMSecs + (coordinatesEpochNArcSecs * sin(raRadians) * tan(decRadians)/15)) * dateDiffYears) / 3600;
+    var correctedRaDecimalHours = raDecimalHours + s1DecimalHours;
+
+    var s2DecimalDegrees = (coordinatesEpochNArcSecs * cos(raRadians) * dateDiffYears) / 3600;
+    var correctedDecDecimalDegrees = decDecimalDegrees + s2DecimalDegrees;
+
+    return new RightAscensionEquatorialCoordinates(
+        this.decimalHoursToHoursMinutesSeconds(correctedRaDecimalHours),
+        this.decimalDegreesToDegreesMinutesSeconds(correctedDecDecimalDegrees)
+    );
 }
 
 /*
